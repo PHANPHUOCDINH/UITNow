@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     Toolbar toolbar;
     TextView toolBarTextView;
+    private ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         // setSupportActionBar(toolbar);
         tabLayout = findViewById(R.id.tabLayout);
         createTabs();
-
+        profileFragment=new ProfileFragment();
     }
 
 
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 3:
                         toolBarTextView.setText("Thông tin cá nhân");
-                        // TTCN
+                        displayFragment(profileFragment);
                         break;
                 }
             }
@@ -111,4 +112,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    protected void displayFragment(Fragment fragment)
+    {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.layoutContainer, fragment);
+        ft.commit();
+    }
 }
