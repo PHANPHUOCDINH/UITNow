@@ -26,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     TextView toolBarTextView;
     private ProfileFragment profileFragment;
-
+    private OrderFragment orderFragment;
+    private OrderFoodFragment orderFoodFragment;
+    private BookTableFragment bookTableFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -46,7 +48,15 @@ public class MainActivity extends AppCompatActivity {
         // setSupportActionBar(toolbar);
         tabLayout = findViewById(R.id.tabLayout);
         createTabs();
-        profileFragment=new ProfileFragment();
+        if(savedInstanceState==null) {
+            profileFragment = new ProfileFragment();
+            orderFragment = new OrderFragment();
+            orderFoodFragment = new OrderFoodFragment();
+            bookTableFragment = new BookTableFragment();
+            FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.layoutContainer,orderFoodFragment,"Order Food");
+            ft.commit();
+        }
     }
 
 
@@ -81,21 +91,21 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int tabPos = tab.getPosition();
                 switch (tabPos) {
-                    case 0: // Home
+                    case 0: // Order Food
                         toolBarTextView.setText("Đặt Món");
-                   //     Đặt món
+                        displayOrderFoodFragment();
                         break;
-                    case 1: // Order
+                    case 1: // Book Table
                         toolBarTextView.setText("Đặt Bàn");
-                     //  Đặt bàn
+                        displayBookTableFragment();
                         break;
-                    case 2: // Profile
+                    case 2: // Order
                         toolBarTextView.setText("Đơn đã đặt");
-                       // Đơn đã đặt
+                        displayOrderFragment();
                         break;
-                    case 3:
+                    case 3: // Profile
                         toolBarTextView.setText("Thông tin cá nhân");
-                        displayFragment(profileFragment);
+                        displayProfileFragment();
                         break;
                 }
             }
@@ -112,10 +122,104 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    protected void displayFragment(Fragment fragment)
+    protected void displayOrderFoodFragment()
     {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.layoutContainer, fragment);
+        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+        if(orderFoodFragment.isAdded())
+        {
+            ft.show(orderFoodFragment);
+        }
+        else
+        {
+            ft.add(R.id.layoutContainer,orderFoodFragment,"Order Food");
+        }
+        if(bookTableFragment.isAdded())
+        {
+            ft.hide(bookTableFragment);
+        }
+        if(orderFragment.isAdded())
+        {
+            ft.hide(orderFragment);
+        }
+        if(profileFragment.isAdded())
+        {
+            ft.hide(profileFragment);
+        }
+        ft.commit();
+    }
+    protected void displayBookTableFragment()
+    {
+        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+        if(bookTableFragment.isAdded())
+        {
+            ft.show(bookTableFragment);
+        }
+        else
+        {
+            ft.add(R.id.layoutContainer,bookTableFragment,"Order Food");
+        }
+        if(orderFoodFragment.isAdded())
+        {
+            ft.hide(orderFoodFragment);
+        }
+        if(orderFragment.isAdded())
+        {
+            ft.hide(orderFragment);
+        }
+        if(profileFragment.isAdded())
+        {
+            ft.hide(profileFragment);
+        }
+        ft.commit();
+    }
+    protected void displayOrderFragment()
+    {
+        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+        if(orderFragment.isAdded())
+        {
+            ft.show(orderFragment);
+        }
+        else
+        {
+            ft.add(R.id.layoutContainer,orderFragment,"Order Food");
+        }
+        if(bookTableFragment.isAdded())
+        {
+            ft.hide(bookTableFragment);
+        }
+        if(orderFoodFragment.isAdded())
+        {
+            ft.hide(orderFoodFragment);
+        }
+        if(profileFragment.isAdded())
+        {
+            ft.hide(profileFragment);
+        }
+        ft.commit();
+    }
+    protected void displayProfileFragment()
+    {
+        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+        if(profileFragment.isAdded())
+        {
+            ft.show(profileFragment);
+        }
+        else
+        {
+            ft.add(R.id.layoutContainer,profileFragment,"Order Food");
+        }
+        if(bookTableFragment.isAdded())
+        {
+            ft.hide(bookTableFragment);
+        }
+        if(orderFragment.isAdded())
+        {
+            ft.hide(orderFragment);
+        }
+        if(orderFoodFragment.isAdded())
+        {
+            ft.hide(orderFoodFragment);
+        }
         ft.commit();
     }
 }
