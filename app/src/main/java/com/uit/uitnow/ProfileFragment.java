@@ -1,4 +1,4 @@
-package edu.csc.drinknow;
+package com.uit.uitnow;
 
 import android.app.Activity;
 import android.app.Application;
@@ -31,22 +31,9 @@ import com.uit.uitnow.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-//import androidx.annotation.NonNull;
-//import androidx.annotation.Nullable;
-//import androidx.core.content.FileProvider;
-//import androidx.fragment.app.Fragment;
+
 
 public class ProfileFragment extends Fragment  {
-    private static final String APP_TAG = "FoodNow";
-    public final static int CAPTURE_IMAGE_REQUEST_CODE = 1034;
-    public final static int PICK_PHOTO_REQUEST_CODE = 1046;
-    Dialog dialog;
-
-    CircleImageView ivAvatar;
-    TextView tvEmail,tvAddress;
-
-    Button btnUpdate,btnChangePass,btnSignOut;
-    EditText txtName,txtPhone;
 
     public ProfileFragment()
     {
