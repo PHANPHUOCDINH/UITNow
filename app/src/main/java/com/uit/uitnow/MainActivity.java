@@ -1,6 +1,5 @@
 package com.uit.uitnow;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
-import com.uit.uitnow.R;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     //    Coordinat
     private TabLayout tabLayout;
