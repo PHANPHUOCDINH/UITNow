@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 // nhà hàng đặt bàn
@@ -33,7 +35,15 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Restaurant r=listRests.get(position);
-        // đổ dữ liệu
+        Picasso.get().load(r.getLogoUrl()).into(holder.ivImage);
+        holder.tvAddress.setText(r.getAddress());
+        holder.tvName.setText(r.getName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //click vào 1 nhà hàng
+            }
+        });
     }
 
     @Override

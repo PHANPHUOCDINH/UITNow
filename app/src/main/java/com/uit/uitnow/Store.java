@@ -6,11 +6,8 @@ public class Store  {
     int id;
     String name;
     String logoUrl;
-    String coverUrl;
     String address;
     String openHour;
-    String lat;// vĩ độ
-    String lng;// kinh độ
     ArrayList<Food> menu;
     public int getId() {
         return id;
@@ -36,13 +33,6 @@ public class Store  {
         this.logoUrl = logoUrl;
     }
 
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
-    }
 
     public String getAddress() {
         return address;
@@ -58,22 +48,6 @@ public class Store  {
 
     public void setOpenHour(String openHour) {
         this.openHour = openHour;
-    }
-
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
-    public String getLng() {
-        return lng;
-    }
-
-    public void setLng(String lng) {
-        this.lng = lng;
     }
 
     public ArrayList<Food> getMenu() {

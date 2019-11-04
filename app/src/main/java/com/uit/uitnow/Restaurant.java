@@ -1,20 +1,17 @@
 package com.uit.uitnow;
 
 public class Restaurant {
-    int id;
+    String id;
     String logoUrl;
-    String coverUrl;
     String name;
     String address;
     String openHours;
-    String lat; //vĩ
-    String lng; //kinh
 
-    public int getId() {
+    public  String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -24,14 +21,6 @@ public class Restaurant {
 
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
-    }
-
-    public String getCoverUrl() {
-        return coverUrl;
-    }
-
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
     }
 
     public String getName() {
@@ -58,19 +47,4 @@ public class Restaurant {
         this.openHours = openHours;
     }
 
-    public String getLat() {
-        return lat;
-    }
-
-    public void setLat(String lat) {
-        this.lat = lat;
-    }
-
-    public String getLng() {
-        return lng;
-    }
-
-    public void setLng(String lng) {
-        this.lng = lng;
-    }
 }
