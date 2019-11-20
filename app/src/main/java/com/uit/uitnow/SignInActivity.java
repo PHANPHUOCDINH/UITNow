@@ -48,8 +48,8 @@ public class SignInActivity  extends AppCompatActivity {
                         if(task.isSuccessful())
                         {
                             Toast.makeText(SignInActivity.this,"login sucsessfull",Toast.LENGTH_SHORT).show();
-
-                            startActivity(new Intent(SignInActivity.this,MainActivity.class));
+                            getInMainActivity();
+                           // startActivity(new Intent(SignInActivity.this,MainActivity.class));
                         }
                         else
                         {
@@ -67,5 +67,12 @@ public class SignInActivity  extends AppCompatActivity {
                 startActivity(new Intent(SignInActivity.this,ForgotPasswordActivity.class));
             }
         });
+    }
+
+    private void getInMainActivity()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

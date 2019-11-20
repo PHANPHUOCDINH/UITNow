@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">UITNow</string>
+    <string name="google_maps_api_key">AIzaSyA0JWfkC28I3KpTzcVwYuLjVlMn3fsIuns</string>
 </resources>

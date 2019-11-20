@@ -33,19 +33,25 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 firebaseAuth =FirebaseAuth.getInstance();
-                firebaseAuth.createUserWithEmailAndPassword(email.getText().toString()
-                        , password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(SignUpActivity.this, "Register successfull", Toast.LENGTH_SHORT).show();
+                if(password.equals(confirm)) {
+                    firebaseAuth.createUserWithEmailAndPassword(email.getText().toString()
+                            , password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(SignUpActivity.this, "Registered successful", Toast.LENGTH_SHORT).show();
 
-                            startActivity(new Intent(SignUpActivity.this,SignInActivity.class));
-                        } else {
-                            Toast.makeText(SignUpActivity.this, "error", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
+                            } else {
+                                Toast.makeText(SignUpActivity.this, "Registered fail", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                else
+                {
+                    Toast.makeText(SignUpActivity.this,"Password Confirm Wrong",Toast.LENGTH_SHORT).show();
+                }
             }
 
         });

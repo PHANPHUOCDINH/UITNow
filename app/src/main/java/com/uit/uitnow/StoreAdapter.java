@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 // Cửa hàng đặt món
@@ -33,7 +35,15 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Store store= listStores.get(position);
-        // đổ dữ liệu
+        Picasso.get().load(store.getLogoUrl()).into(holder.ivImage);
+        holder.tvName.setText(store.getName());
+        holder.tvAddress.setText(store.getAddress());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // click vào một cửa hàng
+            }
+        });
     }
 
     @Override

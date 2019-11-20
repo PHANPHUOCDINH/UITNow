@@ -3,17 +3,17 @@ package com.uit.uitnow;
 import java.util.ArrayList;
 
 public class Store  {
-    int id;
+    String id;
     String name;
     String logoUrl;
     String address;
     String openHour;
     ArrayList<Food> menu;
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

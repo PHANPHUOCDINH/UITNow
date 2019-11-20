@@ -1,6 +1,10 @@
 package com.uit.uitnow;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +19,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class OrderFoodFragment extends Fragment {
     RecyclerView rvStores;
     StoreAdapter storeAdapter;
-    ArrayList<Store> listStores;
+    ArrayList<Store> listStores=new ArrayList<>();
     SwipeRefreshLayout swipeStores;
     TextView tvMyAddress;
     AppCompatSpinner spinner;
+    FirebaseFirestore db;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,18 +58,79 @@ public class OrderFoodFragment extends Fragment {
                 swipeStores.setRefreshing(false);
             }
         });
-        getStores();
+        showStores();
         return view;
     }
 
-    private void getStores()
-    {
-        // kết nối firebase lấy dữ liệu
-
-//        storeAdapter = new StoreAdapter(listStores);
-//        rvStores.setAdapter(storeAdapter);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        rvStores.setLayoutManager(layoutManager);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (LocationServiceTask.isLocationServiceEnabled(getActivity())) { // 1
+            if (PermissionTask.isLocationServiceAllowed(getActivity())) // 2
+                getLastLocation(getActivity()); // 3
+            else
+                PermissionTask.requestLocationServicePermissions(getActivity()); // 4
+        } else {
+            LocationServiceTask.displayEnableLocationServiceDialog(getActivity()); // 5
+        }
     }
 
+    private void showStores()
+    {
+        listStores.clear();
+        db= FirebaseFirestore.getInstance();
+        db.collection("Stores").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Store s=document.toObject(Store.class);
+                        listStores.add(s);
+                    }
+                    storeAdapter = new StoreAdapter(listStores);
+                    rvStores.setAdapter(storeAdapter);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                    rvStores.setLayoutManager(layoutManager);
+                } else {
+                    Log.d("Test", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+    }
+
+    private void getLastLocation(Context context) {
+        FusedLocationProviderClient locationClient =
+                getFusedLocationProviderClient(context);
+        locationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location!=null) {
+                    //Log.e("Test", "Location Success " + String.valueOf(location.getLatitude()));
+                    onLocationChanged(location);
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("Test","Location Failed");
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+        String address=LocationServiceTask.getAddressFromLatLng(getActivity(),latLng);
+        tvMyAddress.setText("Delivery to: "+ address);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionTask.LOCATION_SERVICE_REQUEST_CODE &&
+                grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getLastLocation(getActivity());
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }
