@@ -8,6 +8,7 @@ import com.google.firebase.FirebaseApp;
 public class App extends Application {
     User user;
     LatLng location;
+
     @Override
     public void onCreate() {
         super.onCreate();

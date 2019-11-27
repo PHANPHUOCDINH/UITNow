@@ -1,6 +1,7 @@
 package com.uit.uitnow;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -145,6 +148,11 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
 
     @Override
     public void onStoreClick(Store store) {
-
+        Intent intent = new Intent(getActivity(), StoreActivity.class);
+        //intent.putExtra("RESTAURANT", restaurant);
+        startActivity(intent);
+        EventBus.getDefault().postSticky(new MessageEvent(store, com.uit.uitnow.MessageEvent.FROM_storeFRAG_TO_storeACT));
+// getActivity().overridePendingTransition(R.anim.slide_in_right,
+        //       R.anim.slide_out_left); // animation
     }
 }

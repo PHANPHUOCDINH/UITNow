@@ -7,8 +7,8 @@ public class Store  {
     String name;
     String logoUrl;
     String address;
-    String openHour;
-    ArrayList<Food> menu;
+    String openHours;
+    ArrayList<Item> menu;
     public String getId() {
         return id;
     }
@@ -42,19 +42,19 @@ public class Store  {
         this.address = address;
     }
 
-    public String getOpenHour() {
-        return "Open Hours: " + openHour;
+    public String getOpenHours() {
+        return "Open Hours: " + openHours;
     }
 
-    public void setOpenHour(String openHour) {
-        this.openHour = openHour;
+    public void setOpenHours(String openHour) {
+        this.openHours = openHour;
     }
 
-    public ArrayList<Food> getMenu() {
+    public ArrayList<Item> getMenu() {
         return menu;
     }
 
-    public void setMenu(ArrayList<Food> menu) {
+    public void setMenu(ArrayList<Item> menu) {
         this.menu = menu;
     }
 }

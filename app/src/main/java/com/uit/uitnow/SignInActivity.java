@@ -72,7 +72,7 @@ public class SignInActivity  extends AppCompatActivity {
         if(email!=null)
         {
             db= FirebaseFirestore.getInstance();
-            db.collection("users").whereEqualTo("email",email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("Users").whereEqualTo("email",email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
@@ -88,7 +88,7 @@ public class SignInActivity  extends AppCompatActivity {
                             getInMainActivity();
                         }
                     } else {
-                        Log.d("CSC", "Error getting documents: ", task.getException());
+                        Log.d("Test", "Error getting documents: ", task.getException());
                     }
                 }
             });

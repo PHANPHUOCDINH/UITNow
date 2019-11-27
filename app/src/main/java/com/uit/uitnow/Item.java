@@ -1,18 +1,19 @@
 package com.uit.uitnow;
 
-public class Food {
-    public int id;
+public class Item {
+
+    public String id;
     public String name;
-    public String imageUrl;
+    public String image;
     public int price;
 
-    public Food() {
+    public Item() {
     }
 
-    public Food(int id,String name, String imageUrl, int price) {
+    public Item(String id,String name, String image, int price) {
         this.id=id;
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.image = image;
         this.price = price;
     }
 
@@ -20,11 +21,11 @@ public class Food {
         return price;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -37,11 +38,11 @@ public class Food {
     }
 
     public String getImage() {
-        return imageUrl;
+        return image;
     }
 
     public void setImage(String image) {
-        this.imageUrl = image;
+        this.image = image;
     }
 
     public void setPrice(int price) {
