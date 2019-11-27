@@ -33,7 +33,8 @@ import java.util.ArrayList;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
-public class OrderFoodFragment extends Fragment {
+public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreListener {
+    App app;
     RecyclerView rvStores;
     StoreAdapter storeAdapter;
     ArrayList<Store> listStores=new ArrayList<>();
@@ -63,6 +64,12 @@ public class OrderFoodFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        app=(App)getActivity().getApplication();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (LocationServiceTask.isLocationServiceEnabled(getActivity())) { // 1
@@ -87,7 +94,7 @@ public class OrderFoodFragment extends Fragment {
                         Store s=document.toObject(Store.class);
                         listStores.add(s);
                     }
-                    storeAdapter = new StoreAdapter(listStores);
+                    storeAdapter = new StoreAdapter(listStores,OrderFoodFragment.this);
                     rvStores.setAdapter(storeAdapter);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                     rvStores.setLayoutManager(layoutManager);
@@ -121,8 +128,10 @@ public class OrderFoodFragment extends Fragment {
 
     private void onLocationChanged(Location location) {
         LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+        app.location=latLng;
         String address=LocationServiceTask.getAddressFromLatLng(getActivity(),latLng);
         tvMyAddress.setText("Delivery to: "+ address);
+        PrefUtil.savePref(getActivity(),"address",address);
     }
 
     @Override
@@ -132,5 +141,10 @@ public class OrderFoodFragment extends Fragment {
             getLastLocation(getActivity());
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void onStoreClick(Store store) {
+
     }
 }

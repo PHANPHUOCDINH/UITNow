@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             ft.add(R.id.layoutContainer,orderFoodFragment,"Order Food");
             ft.commit();
         }
+      //  Log.e("Test",PrefUtil.loadPref(this,"email")+PrefUtil.loadPref(this,"id")+PrefUtil.loadPref(this,"name")+PrefUtil.loadPref(this,"phone"));
     }
 
 

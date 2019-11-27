@@ -33,7 +33,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful())
                         {
-                            Toast.makeText(ForgotPasswordActivity.this,"password reset wmail sent!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPasswordActivity.this,"password reset email sent!",Toast.LENGTH_SHORT).show();
                             finish();
                             startActivity(new Intent(ForgotPasswordActivity.this,SignInActivity.class));
                         }

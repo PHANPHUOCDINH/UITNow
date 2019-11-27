@@ -32,7 +32,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -41,6 +43,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.uit.uitnow.R;
 
 import java.io.File;
@@ -89,7 +92,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
         tvAddress=view.findViewById(R.id.tvAddress);
         txtName=view.findViewById(R.id.tvName);
         txtPhone=view.findViewById(R.id.tvPhone);
+        tvAddress.setText(PrefUtil.loadPref(getActivity(),"address"));
+        txtName.setText(PrefUtil.loadPref(getActivity(),"name"));
+        txtPhone.setText(PrefUtil.loadPref(getActivity(),"phone"));
+        tvEmail.setText(PrefUtil.loadPref(getActivity(),"email"));
+        String photoPath=PrefUtil.loadPref(getActivity(),"photo");
+        if(!photoPath.isEmpty())
+            Picasso.get().load(PrefUtil.loadPref(getActivity(), "photo")).into(ivAvatar);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String photoPath=PrefUtil.loadPref(getActivity(),"photo");
+        if(!photoPath.isEmpty())
+            Picasso.get().load(PrefUtil.loadPref(getActivity(), "photo")).into(ivAvatar);
     }
 
     @Override
@@ -105,18 +123,54 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
             if(id==R.id.btnSignOut)
             {
                 // Đăng xuất
+                FirebaseAuth.getInstance().signOut();
+                PrefUtil.clearPref(getActivity(),"email");
+                PrefUtil.clearPref(getActivity(),"id");
+                PrefUtil.clearPref(getActivity(),"photo");
+                PrefUtil.clearPref(getActivity(),"name");
+                PrefUtil.clearPref(getActivity(),"phone");
+                PrefUtil.clearPref(getActivity(),"address");
+                Intent intent = new Intent(getActivity(), SignInActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                Toast.makeText(getActivity(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
             }
             else
             {
                 if(id==R.id.btnUpdate)
                 {
-                    //cập nhật
+                    final String name=txtName.getText().toString();
+                    final String phone=txtPhone.getText().toString();
+                    final String address=tvAddress.getText().toString();
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("name", name);
+                    data.put("phone", phone);
+                    data.put("address",address);
+                    DocumentReference docRef = db.collection("Users").document(PrefUtil.loadPref(getActivity(),"id"));
+// cập nhật field “capital” của document “DC”
+                    docRef
+                            .update(data)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getActivity(),"Đã cập nhật",Toast.LENGTH_SHORT).show();
+                                    PrefUtil.savePref(getActivity(),"name",name);
+                                    PrefUtil.savePref(getActivity(),"phone",phone);
+                                    PrefUtil.savePref(getActivity(),"address",address);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getActivity(),"Cập nhật thất bại",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
                 else
                 {
                     if(id==R.id.btnChangePassword)
                     {
-                        // đổi mk
+                        showChangePasswordDialog();
                     }
                 }
             }
@@ -185,7 +239,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
             final ProgressDialog progressDialog=new ProgressDialog(getActivity());
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-            final StorageReference ref=storageReference.child("avatars/"+ Long.toString(System.currentTimeMillis()));
+            final StorageReference ref=storageReference.child("avatars/"+ PrefUtil.loadPref(getActivity(),"id"));
             ref.putFile(uriPhoto).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -218,6 +272,27 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
                     //cập nhật link avatar
+                    if (task.isSuccessful()){
+                        Uri downUri = task.getResult();
+                        Map<String, Object> data = new HashMap<>();
+                        PrefUtil.savePref(getActivity(),"photo",downUri.toString());
+                        data.put("photo", downUri.toString());
+                        DocumentReference docRef = db.collection("Users").document(PrefUtil.loadPref(getActivity(),"id"));
+                        docRef
+                                .update(data)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getActivity(),"Đã cập nhật",Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getActivity(),"Cập nhật thất bại",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
                 }
             });
         }
@@ -248,15 +323,39 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
                     changePass(oldPass,newPass);
                 else
                     Toast.makeText(getActivity(),"Password Confirm Fail", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
         });
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.show();
     }
 
-    private void changePass(String oldPass,String newPass)
+    private void changePass(String oldPass, final String newPass)
     {
-        // đổi mật khẩu
+        final FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+        AuthCredential credential= EmailAuthProvider.getCredential(user.getEmail(),oldPass);
+        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful())
+                {
+                    user.updatePassword(newPass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful())
+                            {
+                                Log.e("Test","Update Password Successful");
+                                Toast.makeText(getActivity(),"Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                                Log.e("Test","Update Password Failed");
+                        }
+                    });
+                }
+                else
+                    Log.e("Test","Old Password Wrong");
+            }
+        });
     }
 
     @Override

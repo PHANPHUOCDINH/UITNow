@@ -17,9 +17,11 @@ import java.util.ArrayList;
 // Cửa hàng đặt món
 public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder>  {
     private ArrayList<Store> listStores;
+    private StoreListener listener;
 
-    public StoreAdapter(ArrayList<Store> stores) {
+    public StoreAdapter(ArrayList<Store> stores,StoreListener listener) {
         listStores = stores;
+        this.listener=listener;
     }
 
     @NonNull
@@ -41,7 +43,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // click vào một cửa hàng
+                listener.onStoreClick(store);
             }
         });
     }
@@ -62,5 +64,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
         }
     }
 
-
+    public interface StoreListener{
+        public void onStoreClick(Store store);
+    }
 }

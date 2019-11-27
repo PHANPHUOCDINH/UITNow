@@ -9,7 +9,7 @@
         android:id="@+id/tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Take Picture or Choose A Photo"
+        android:text="Chọn hoặc Chụp Ảnh"
         android:gravity="center"
         android:textColor="@color/colorBlack"
         android:textSize="18sp"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_green_border_button"
-        android:text="Take A Photo"
+        android:text="Chụp Camera"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp" />
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_green_border_button"
-        android:text="Choose From Gallery"
+        android:text="Chọn từ Ảnh"
         android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
         android:textSize="16sp" />
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_red_border_button"
-        android:text="Cancel"
+        android:text="Hủy"
         android:textAllCaps="false"
         android:textColor="@color/colorRed"
         android:textSize="16sp" />

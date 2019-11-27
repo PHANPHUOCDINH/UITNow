@@ -44,7 +44,7 @@
         android:background="@android:color/holo_orange_light"
         android:id="@+id/btnCancel"
 
-        android:text="Cancel"
+        android:text="Hủy"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
