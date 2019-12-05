@@ -22,8 +22,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
     private ArrayList<Item> mItems;
     private OnItemClickListener mListener;
 
-    public ItemAdapter(ArrayList<Item> items) {
+    public ItemAdapter(ArrayList<Item> items,OnItemClickListener listener) {
         mItems=items;
+        mListener=listener;
     }
 
     @NonNull
@@ -39,13 +40,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Item item= mItems.get(position);
-     //   Picasso.get().load(drink.getImage()).into(viewHolder.ivImage);
+        Picasso.get().load(item.getImage()).into(holder.ivImage);
         holder.tvName.setText(item.name);
         holder.tvPrice.setText(String.valueOf(item.price)+" VND");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mListener.onItemClick(item);
             }
         });
     }

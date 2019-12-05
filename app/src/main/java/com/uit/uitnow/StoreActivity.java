@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-public class StoreActivity extends AppCompatActivity implements View.OnClickListener {
+public class StoreActivity extends AppCompatActivity implements View.OnClickListener,ItemAdapter.OnItemClickListener {
     TextView tvName, tvAddress, tvOpenHours, tvTotalPrices, tvTotalItems;
     ImageView ivCover;
     View layoutViewBasket;
@@ -51,6 +52,7 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         if (event != null && MessageEvent.FROM_storeFRAG_TO_storeACT.equals(event.type)) {
             store=event.store;
             store.menu=new ArrayList<>();
+            app.basket = new Basket();
             displayRestaurantInfo();
             showMenu(store.id);
             EventBus.getDefault().removeStickyEvent(event);
@@ -97,7 +99,7 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
                                 Log.d("Test", document.getId() + " => " + document.getData());
                             }
                             Log.e("Test","Number of stores: "+store.menu.size());
-                            itemAdapter = new ItemAdapter(store.menu);
+                            itemAdapter = new ItemAdapter(store.menu,StoreActivity.this);
                             rvDrinks.setAdapter(itemAdapter);
                       //      updateBasket();
                         } else {
@@ -110,6 +112,31 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
+        if(view.getId()==R.id.layoutViewBasket)
+        {
+            if (app.basket.getTotalItem() > 0) {
+                BasketDialogFragment dialog = new BasketDialogFragment(app.basket);
+                dialog.show(getSupportFragmentManager(), "basket_dialog");
+            } else {
+                Toast.makeText(this, "Giỏ hàng đang trống",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
+    @Override
+    public void onItemClick(Item item) {
+        ItemBasket itemBasket = app.basket.getItem(item.id); // 1
+        if (itemBasket == null) // 2
+            itemBasket = new ItemBasket(item, 1, item.price);
+
+        AddToBasketDialogFragment dialog = new AddToBasketDialogFragment(itemBasket);
+        dialog.show(getSupportFragmentManager(), "add_to_basket_dialog"); // 3
+    }
+
+    public void updateBasket() {
+        app.basket.calculateBasket();
+        tvTotalPrices.setText(app.basket.getTotalPrice());
+        tvTotalItems.setText(app.basket.getTotalItem() + "");
     }
 }
