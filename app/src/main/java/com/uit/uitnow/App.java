@@ -9,6 +9,7 @@ public class App extends Application {
     User user;
     LatLng location;
     Basket basket;
+    Order order;
     @Override
     public void onCreate() {
         super.onCreate();

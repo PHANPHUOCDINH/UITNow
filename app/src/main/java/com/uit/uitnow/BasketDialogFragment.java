@@ -81,30 +81,30 @@ public class BasketDialogFragment extends DialogFragment implements ItemBasketAd
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnPlaceOrder) {
-//            if (basket.getTotalItem() > 0) {
-//                LatLng latLng = new LatLng(Float.parseFloat(((StoreActivity)
-//                        getActivity()).store.lat), Float.parseFloat(((StoreActivity)
-//                        getActivity()).store.lng));
-//
-//// 1
-//                Log.e("CSC","Store Location: "+latLng.latitude);
-//                Log.e("CSC","Store Location: "+latLng.longitude);
-//                long l=System.currentTimeMillis();
-//                app.order = new Order(String.valueOf(l),PrefUtil.loadPref(getActivity(),"id"),app.basket, app.currentAddress, ((StoreActivity) getActivity()).store.name, app.currentLocation, latLng);
-//                Map<String, Object> data = new HashMap<>();
-//                data.put("id", String.valueOf(l));
-//                data.put("idKhachHang", PrefUtil.loadPref(getActivity(),"id"));
-//                data.put("storeName", ((StoreActivity) getActivity()).store.name);
-//                data.put("deliveryAddress", app.currentAddress);
-//                data.put("tongGia", String.valueOf(app.basket.totalPrice));
-//                data.put("trangThai", "Booking");
-//                db.collection("orders").document(String.valueOf(l)).set(data, SetOptions.merge());
-//// 2
-//                ((StoreActivity) getActivity()).openOrderTrackingActivity(latLng,app.currentLocation);
-//                getDialog().dismiss();
-//            } else {
-//                getDialog().dismiss();
-//            }
+            if (basket.getTotalItem() > 0) {
+                LatLng latLng = new LatLng(Double.parseDouble(((StoreActivity)
+                        getActivity()).store.lat), Double.parseDouble(((StoreActivity)
+                        getActivity()).store.lng));
+
+// 1
+                Log.e("Test","Store Location: "+latLng.latitude);
+                Log.e("Test","Store Location: "+latLng.longitude);
+                long l=System.currentTimeMillis();
+                app.order = new Order(String.valueOf(l),PrefUtil.loadPref(getActivity(),"id"),app.basket, PrefUtil.loadPref(getActivity(),"address"), ((StoreActivity) getActivity()).store.name, app.location, latLng);
+                Map<String, Object> data = new HashMap<>();
+                data.put("id", String.valueOf(l));
+                data.put("idKhachHang", PrefUtil.loadPref(getActivity(),"id"));
+                data.put("storeName", ((StoreActivity) getActivity()).store.name);
+                data.put("deliveryAddress", PrefUtil.loadPref(getActivity(),"address"));
+                data.put("tongGia", String.valueOf(app.basket.totalPrice));
+                data.put("trangThai", app.order.trangThai);
+                db.collection("Orders").document(String.valueOf(l)).set(data, SetOptions.merge());
+// 2
+                ((StoreActivity) getActivity()).openOrderTrackingActivity(latLng);
+                getDialog().dismiss();
+            } else {
+                getDialog().dismiss();
+            }
         }
     }
 

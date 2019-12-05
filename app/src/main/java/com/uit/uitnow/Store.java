@@ -8,6 +8,8 @@ public class Store  {
     String logoUrl;
     String address;
     String openHours;
+    String lat;
+    String lng;
     ArrayList<Item> menu;
     public String getId() {
         return id;
@@ -56,5 +58,21 @@ public class Store  {
 
     public void setMenu(ArrayList<Item> menu) {
         this.menu = menu;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 }

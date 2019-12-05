@@ -1,5 +1,6 @@
 package com.uit.uitnow;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -138,5 +140,12 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         app.basket.calculateBasket();
         tvTotalPrices.setText(app.basket.getTotalPrice());
         tvTotalItems.setText(app.basket.getTotalItem() + "");
+    }
+
+    public void openOrderTrackingActivity(LatLng store) {
+        Intent intent = new Intent(this, OrderTrackingActivity.class);
+        startActivity(intent);
+        EventBus.getDefault().postSticky(new MessageEvent(store,MessageEvent.FROM_storeACT_TO_trackingACT));
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }
