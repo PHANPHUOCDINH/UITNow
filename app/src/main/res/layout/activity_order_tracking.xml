@@ -13,6 +13,7 @@
         android:layout_height="match_parent" />
 
     <RelativeLayout
+        android:id="@+id/layoutRequesting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -115,5 +116,36 @@
             android:textColor="@color/colorBlack"
             android:textSize="14sp"
             android:textStyle="normal" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/layoutOnTheWay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="5dp"
+        android:background="@color/colorWhite"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/tvOnTheWay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Driver on the way"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/tvDriverName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Driver: "
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp"
+            android:layout_below="@id/tvOnTheWay"
+            android:layout_marginTop="5dp"
+            android:textStyle="normal" />
+
     </RelativeLayout>
 </FrameLayout>

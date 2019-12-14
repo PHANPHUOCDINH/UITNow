@@ -1,6 +1,9 @@
 package com.uit.uitnow;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.GeoPoint;
+
+import java.util.Map;
 
 public class Order {
     String id;
@@ -10,20 +13,22 @@ public class Order {
     String deliveryAddress;
     String storeName;
     String tongGia;
-    LatLng deliveryLoccation;
-    LatLng storeLocation;
+    GeoPoint storeLocation;
+    GeoPoint deliveryLocation;
+    GeoPoint driverLocation;
     public Order()
     {
 
     }
-    public Order(String id,String idKhachHang,Basket basket, String deliveryAddress, String storeName, LatLng
-            deliveryLoccation, LatLng storeLocation) {
+
+    public Order(String id,String idKhachHang,Basket basket, String deliveryAddress, String storeName, GeoPoint
+            deliveryLocation, GeoPoint storeLocation) {
         this.id=id;
         this.idKhachHang=idKhachHang;
         this.basket = basket;
         this.deliveryAddress = deliveryAddress;
         this.storeName = storeName;
-        this.deliveryLoccation = deliveryLoccation;
+        this.deliveryLocation = deliveryLocation;
         this.storeLocation = storeLocation;
         this.trangThai="Booking";
     }
@@ -84,19 +89,29 @@ public class Order {
         this.storeName = storeName;
     }
 
-    public LatLng getDeliveryLoccation() {
-        return deliveryLoccation;
+    public GeoPoint getDeliveryLocation() {
+        return deliveryLocation;
     }
 
-    public void setDeliveryLoccation(LatLng deliveryLoccation) {
-        this.deliveryLoccation = deliveryLoccation;
+    public void setDeliveryLocation(GeoPoint deliveryLocation) {
+        this.deliveryLocation = deliveryLocation;
     }
 
-    public LatLng getStoreLocation() {
+    public GeoPoint getStoreLocation() {
         return storeLocation;
     }
 
-    public void setStoreLocation(LatLng storeLocation) {
+    public void setStoreLocation(GeoPoint storeLocation) {
         this.storeLocation = storeLocation;
     }
+
+    public GeoPoint getDriverLocation() {
+        return driverLocation;
+    }
+
+    public void setDriverLocation(GeoPoint driverLocation) {
+        this.driverLocation = driverLocation;
+    }
+
+
 }

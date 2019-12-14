@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,13 +54,13 @@ public class LocationServiceTask {
                         });
         builder.create().show();
     }
-    public static String getAddressFromLatLng(Context context, LatLng latLng) {
+    public static String getAddressFromLatLng(Context context, GeoPoint geoPoint) {
         Geocoder geocoder = new Geocoder(context);
         List<Address> addresses;
         Address address;
         String addressText = "";
         try {
-            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+            addresses = geocoder.getFromLocation(geoPoint.getLatitude(), geoPoint.getLongitude(), 1);
             if (null != addresses && !addresses.isEmpty()) {
                 address = addresses.get(0);
                 if (address.getMaxAddressLineIndex() > 0) {

@@ -10,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +30,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -45,6 +49,8 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
     TextView tvMyAddress;
     AppCompatSpinner spinner;
     FirebaseFirestore db;
+    Button btnTimKiem;
+    EditText txtTimKiem;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,13 +59,23 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         rvStores = view.findViewById(R.id.rvStores);
         swipeStores=view.findViewById(R.id.swipeStores);
         spinner=view.findViewById(R.id.spinnerDistrict);
-        String[] districts={"Quận 1","Quận 2","Quận 3","Quận 4","Quận 5"};
+        btnTimKiem=view.findViewById(R.id.btnTimKiem);
+        txtTimKiem=view.findViewById(R.id.txtTimKiem);
+        String[] districts={"Tất cả","Quận 1","Quận 3","Quận Tân Bình"};
         ArrayAdapter<String> adapterDistrict=new ArrayAdapter<>(getActivity(),R.layout.support_simple_spinner_dropdown_item,districts);
         spinner.setAdapter(adapterDistrict);
         swipeStores.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeStores.setRefreshing(false);
+            }
+        });
+        btnTimKiem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String search=txtTimKiem.getText().toString();
+                String district=spinner.getSelectedItem().toString();
+                filter(search,district);
             }
         });
         showStores();
@@ -130,9 +146,9 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
     }
 
     private void onLocationChanged(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
-        app.location=latLng;
-        String address=LocationServiceTask.getAddressFromLatLng(getActivity(),latLng);
+        GeoPoint geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
+        app.location=geoPoint;
+        String address=LocationServiceTask.getAddressFromLatLng(getActivity(),geoPoint);
         tvMyAddress.setText("Delivery to: "+ address);
         PrefUtil.savePref(getActivity(),"address",address);
     }
@@ -154,5 +170,10 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         EventBus.getDefault().postSticky(new MessageEvent(store, com.uit.uitnow.MessageEvent.FROM_storeFRAG_TO_storeACT));
 // getActivity().overridePendingTransition(R.anim.slide_in_right,
         //       R.anim.slide_out_left); // animation
+    }
+
+    private void filter(String search,String district)
+    {
+
     }
 }

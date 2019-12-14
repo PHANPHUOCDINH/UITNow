@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 
 public class AddToBasketDialogFragment extends DialogFragment implements View.OnClickListener {
     TextView tvName, tvPrice, tvQuantity;
+    EditText txtGhiChu;
     Button btnBuy;
     ImageView btnSubtract, btnAdd;
     App app;
@@ -47,6 +49,7 @@ public class AddToBasketDialogFragment extends DialogFragment implements View.On
         btnAdd.setOnClickListener(this);
         btnSubtract.setOnClickListener(this);
 
+        txtGhiChu=view.findViewById(R.id.txtGhiChu);
         tvName.setText(item.name); // 1
         tvPrice.setText(String.valueOf(item.getPrice())+" VND");
         updateStats();
@@ -76,6 +79,7 @@ public class AddToBasketDialogFragment extends DialogFragment implements View.On
                 break;
             case R.id.btnBuy: // 4
                 if (item.quantity > 0) {
+                    item.setGhichu(txtGhiChu.getText().toString());
                     app.basket.addItem(item);
                 }
                 ((StoreActivity) getActivity()).updateBasket();

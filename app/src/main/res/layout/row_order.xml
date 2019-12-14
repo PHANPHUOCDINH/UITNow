@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/layoutOrders1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvOrderId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_order"
+            android:drawablePadding="10dp"
+            android:padding="5dp"
+            android:text="Order ID: 1234"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvRestaurant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/ic_food"
+            android:drawablePadding="10dp"
+            android:padding="5dp"
+            android:text="7-Elevent Nguyen Thi Minh Khai"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvDestination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/ic_map"
+            android:drawablePadding="10dp"
+            android:padding="5dp"
+            android:text="Test"
+            android:textColor="@color/colorBlack"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_cash"
+                android:drawablePadding="10dp"
+                android:padding="5dp"
+                android:text="Cash"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvTotalPrices"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="99000 VND"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_user_location"
+                android:drawablePadding="10dp"
+                android:padding="5dp"
+                android:text="Trạng Thái"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvTrangThai"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="99000 VND"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/ivDriver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_driver" />
+
+            <TextView
+                android:id="@+id/tvDriverName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/ivDriver"
+                android:text="Tài Xế A"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvDriverName"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/ivDriver"
+                android:text="53N1 - 1234"
+                android:textColor="@color/colorLightBlack"
+                android:textSize="16sp" />
+            <Button
+                android:id="@+id/btnChiTiet"
+                android:textSize="18sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_alignParentRight="true"
+                android:text="Xem đơn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnCancelBooking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/colorRed"
+            android:text="Hủy đặt món"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorPrimary" />
+    </LinearLayout>
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/layoutOrders2"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:gravity="center"-->
+    <!--        android:text="@string/text_no_order"-->
+    <!--        android:textColor="@color/colorBlack"-->
+    <!--        android:textSize="@dimen/largeFontSize"-->
+    <!--        android:visibility="gone" />-->
+
+
+</LinearLayout>

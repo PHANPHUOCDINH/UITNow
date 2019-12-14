@@ -15,8 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -130,7 +134,7 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
     public void onItemClick(Item item) {
         ItemBasket itemBasket = app.basket.getItem(item.id); // 1
         if (itemBasket == null) // 2
-            itemBasket = new ItemBasket(item, 1, item.price);
+            itemBasket = new ItemBasket(item, 1, item.price,"");
 
         AddToBasketDialogFragment dialog = new AddToBasketDialogFragment(itemBasket);
         dialog.show(getSupportFragmentManager(), "add_to_basket_dialog"); // 3
@@ -142,10 +146,47 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         tvTotalItems.setText(app.basket.getTotalItem() + "");
     }
 
-    public void openOrderTrackingActivity(LatLng store) {
+    public void openOrderTrackingActivity() {
         Intent intent = new Intent(this, OrderTrackingActivity.class);
         startActivity(intent);
-        EventBus.getDefault().postSticky(new MessageEvent(store,MessageEvent.FROM_storeACT_TO_trackingACT));
+        EventBus.getDefault().postSticky(new MessageEvent(app.request.storeLocation,MessageEvent.FROM_storeACT_TO_trackingACT));
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    public void requestOrder(GeoPoint store)
+    {
+        app.request = new OrderRequest();
+        app.request.userId = app.user.id;
+        app.request.userName = app.user.name;
+        app.request.userAddress = PrefUtil.loadPref(this,"address");
+        app.request.userLocation=app.location;
+        app.request.storeName = this.store.name;
+        app.request.storeAddress = this.store.address;
+        app.request.storeLocation=store;
+        app.request.total = app.basket.getTotalPrice();
+
+        db.collection("Requests").add(app.request).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                app.requestId = documentReference.getId();
+                Log.e("Test:",   " request id: " + app.requestId);
+                app.request.id = documentReference.getId();
+                PrefUtil.savePref(StoreActivity.this, "request_id", app.requestId);
+                updateRequestId();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+    }
+
+    private void updateRequestId() {
+        db.collection("Requests").document(app.requestId).set(app.request).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                openOrderTrackingActivity();
+            }
+        });
     }
 }

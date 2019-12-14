@@ -37,4 +37,8 @@ public class Basket {
     public int getTotalItem() { // 5
         return totalItem;
     }
+
+    public HashMap<String, ItemBasket> getItems() {
+        return items;
+    }
 }

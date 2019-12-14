@@ -36,27 +36,28 @@ public class ItemBasketAdapter extends RecyclerView.Adapter<ItemBasketAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-        final ItemBasket drink = mItems.get(i);
-        viewHolder.tvName.setText(drink.name);
-        viewHolder.tvQuantity.setText(drink.getQuantityStr());
-        viewHolder.tvPrice.setText(String.valueOf(drink.getPrice()+ " VND"));
-        viewHolder.tvSum.setText(drink.getSum());
+        final ItemBasket itemBasket = mItems.get(i);
+        viewHolder.tvName.setText(itemBasket.name);
+        viewHolder.tvQuantity.setText(itemBasket.getQuantityStr());
+        viewHolder.tvPrice.setText(String.valueOf(itemBasket.getPrice()+ " VND"));
+        viewHolder.tvSum.setText(itemBasket.getSum());
         viewHolder.btnSubtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // 1
-                drink.decrease();
-                updateStats(viewHolder, drink);
-                mListener.onChangeItemQuantity(drink);
+                itemBasket.decrease();
+                updateStats(viewHolder, itemBasket);
+                mListener.onChangeItemQuantity(itemBasket);
             }
         });
         viewHolder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // 2
-                drink.increase();
-                updateStats(viewHolder, drink);
-                mListener.onChangeItemQuantity(drink);
+                itemBasket.increase();
+                updateStats(viewHolder, itemBasket);
+                mListener.onChangeItemQuantity(itemBasket);
             }
         });
+        viewHolder.tvGhiChu.setText(itemBasket.getGhichu());
     }
 
     @Override
@@ -65,7 +66,7 @@ public class ItemBasketAdapter extends RecyclerView.Adapter<ItemBasketAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvPrice, tvQuantity, tvSum;
+        TextView tvName, tvPrice, tvQuantity, tvSum,tvGhiChu;
         ImageView btnSubtract, btnAdd;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -75,6 +76,7 @@ public class ItemBasketAdapter extends RecyclerView.Adapter<ItemBasketAdapter.Vi
             tvSum = itemView.findViewById(R.id.tvSum);
             btnSubtract = itemView.findViewById(R.id.btnSubtract);
             btnAdd = itemView.findViewById(R.id.btnAdd);
+            tvGhiChu=itemView.findViewById(R.id.tvGhiChu);
         }
     }
 

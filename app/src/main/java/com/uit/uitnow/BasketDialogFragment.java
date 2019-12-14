@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
@@ -82,15 +83,13 @@ public class BasketDialogFragment extends DialogFragment implements ItemBasketAd
     public void onClick(View v) {
         if (v.getId() == R.id.btnPlaceOrder) {
             if (basket.getTotalItem() > 0) {
-                LatLng latLng = new LatLng(Double.parseDouble(((StoreActivity)
+                GeoPoint geoPoint = new GeoPoint(Double.parseDouble(((StoreActivity)
                         getActivity()).store.lat), Double.parseDouble(((StoreActivity)
                         getActivity()).store.lng));
 
 // 1
-                Log.e("Test","Store Location: "+latLng.latitude);
-                Log.e("Test","Store Location: "+latLng.longitude);
                 long l=System.currentTimeMillis();
-                app.order = new Order(String.valueOf(l),PrefUtil.loadPref(getActivity(),"id"),app.basket, PrefUtil.loadPref(getActivity(),"address"), ((StoreActivity) getActivity()).store.name, app.location, latLng);
+                app.order = new Order(String.valueOf(l),PrefUtil.loadPref(getActivity(),"id"),basket, PrefUtil.loadPref(getActivity(),"address"), ((StoreActivity) getActivity()).store.name, app.location, geoPoint);
                 Map<String, Object> data = new HashMap<>();
                 data.put("id", String.valueOf(l));
                 data.put("idKhachHang", PrefUtil.loadPref(getActivity(),"id"));
@@ -98,9 +97,26 @@ public class BasketDialogFragment extends DialogFragment implements ItemBasketAd
                 data.put("deliveryAddress", PrefUtil.loadPref(getActivity(),"address"));
                 data.put("tongGia", String.valueOf(app.basket.totalPrice));
                 data.put("trangThai", app.order.trangThai);
+                data.put("deliveryLocation",app.order.deliveryLocation);
+                data.put("storeLocation",app.order.storeLocation);
                 db.collection("Orders").document(String.valueOf(l)).set(data, SetOptions.merge());
 // 2
-                ((StoreActivity) getActivity()).openOrderTrackingActivity(latLng);
+//                for(int i=0;i<app.basket.getItems().size();i++)
+//                {
+//                    dataBasket.put("name","")
+//                }
+                for(Map.Entry<String,ItemBasket> entry : basket.getItems().entrySet())
+                {
+                    ItemBasket item=entry.getValue();
+                    Map<String, Object> itemData=new HashMap<>();
+                    itemData.put("name",item.getName());
+                    itemData.put("price",item.getPrice());
+                    itemData.put("quantity",item.getQuantity());
+                    itemData.put("ghichu",item.getGhichu());
+                    itemData.put("image",item.getImage());
+                    db.collection("Orders").document(String.valueOf(l)).collection("basket").document(item.getId()).set(itemData,SetOptions.merge());
+                }
+                ((StoreActivity) getActivity()).requestOrder(geoPoint);
                 getDialog().dismiss();
             } else {
                 getDialog().dismiss();
