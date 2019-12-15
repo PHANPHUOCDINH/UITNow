@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            ft.add(R.id.layoutContainer,bookTableFragment,"Order Food");
+            ft.add(R.id.layoutContainer,bookTableFragment,"Book Table");
         }
         if(orderFoodFragment.isAdded())
         {
@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            ft.add(R.id.layoutContainer,orderFragment,"Order Food");
+            ft.add(R.id.layoutContainer,orderFragment,"Order");
         }
         if(bookTableFragment.isAdded())
         {
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            ft.add(R.id.layoutContainer,profileFragment,"Order Food");
+            ft.add(R.id.layoutContainer,profileFragment,"Profile");
         }
         if(bookTableFragment.isAdded())
         {

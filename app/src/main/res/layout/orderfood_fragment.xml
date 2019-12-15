@@ -2,34 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:orientation="vertical">
-    <LinearLayout
-        android:orientation="horizontal"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/txtTimKiem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/txtTimKiem"
-            android:textSize="15sp"
-            android:hint="Nhập tên quán ăn"
-            android:layout_weight="3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableRight="@drawable/icon_search"/>
-        <Button
-            android:textAllCaps="false"
-            android:id="@+id/btnTimKiem"
-            android:textSize="15sp"
-            android:text="Tìm kiếm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinnerDistrict"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        app:defaultQueryHint="Tìm kiếm cửa hàng"/>
     <TextView
         android:id="@+id/tvMyAddress"
         android:layout_width="match_parent"

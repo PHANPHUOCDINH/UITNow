@@ -3,6 +3,8 @@ package com.uit.uitnow;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -46,8 +48,7 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         swipeOrders.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getOrders();
-                swipeOrders.setRefreshing(false);
+                showOrders();
             }
         });
         return view;
@@ -65,7 +66,7 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         idUser=PrefUtil.loadPref(getActivity(),"id");
         db=FirebaseFirestore.getInstance();
         app=(App)getActivity().getApplication();
-        getOrders();
+        showOrders();
         //   getActivity().getActionBar().setTitle("Đơn Hàng");
     }
 
@@ -97,7 +98,7 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         getItemFromOrder(order);
     }
 
-    private void getOrders()
+    private void showOrders()
     {
         orders.clear();
         db.collection("Orders").whereEqualTo("idKhachHang",idUser).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -114,6 +115,7 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
                     rvOrders.setAdapter(adapter);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                     rvOrders.setLayoutManager(layoutManager);
+                    swipeOrders.setRefreshing(false);
                 } else {
                     Log.e("Test", "Error getting documents: ", task.getException());
                 }
@@ -146,4 +148,5 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
             }
         });
     }
+
 }

@@ -18,13 +18,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,7 +50,7 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
     AppCompatSpinner spinner;
     FirebaseFirestore db;
     Button btnTimKiem;
-    EditText txtTimKiem;
+    SearchView txtTimKiem;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,24 +58,23 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         tvMyAddress=view.findViewById(R.id.tvMyAddress);
         rvStores = view.findViewById(R.id.rvStores);
         swipeStores=view.findViewById(R.id.swipeStores);
-        spinner=view.findViewById(R.id.spinnerDistrict);
-        btnTimKiem=view.findViewById(R.id.btnTimKiem);
         txtTimKiem=view.findViewById(R.id.txtTimKiem);
-        String[] districts={"Tất cả","Quận 1","Quận 3","Quận Tân Bình"};
-        ArrayAdapter<String> adapterDistrict=new ArrayAdapter<>(getActivity(),R.layout.support_simple_spinner_dropdown_item,districts);
-        spinner.setAdapter(adapterDistrict);
+        txtTimKiem.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                storeAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         swipeStores.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeStores.setRefreshing(false);
-            }
-        });
-        btnTimKiem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String search=txtTimKiem.getText().toString();
-                String district=spinner.getSelectedItem().toString();
-                filter(search,district);
+                showStores();
             }
         });
         showStores();
@@ -117,6 +116,7 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
                     rvStores.setAdapter(storeAdapter);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                     rvStores.setLayoutManager(layoutManager);
+                    swipeStores.setRefreshing(false);
                 } else {
                     Log.d("Test", "Error getting documents: ", task.getException());
                 }
@@ -172,8 +172,5 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         //       R.anim.slide_out_left); // animation
     }
 
-    private void filter(String search,String district)
-    {
 
-    }
 }

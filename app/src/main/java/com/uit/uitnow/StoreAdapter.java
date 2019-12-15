@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,12 +17,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 // Cửa hàng đặt món
-public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder>  {
+public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> implements Filterable {
+    private ArrayList<Store> listStoresFull;
     private ArrayList<Store> listStores;
     private StoreListener listener;
 
     public StoreAdapter(ArrayList<Store> stores,StoreListener listener) {
         listStores = stores;
+        listStoresFull=new ArrayList<>(stores);
         this.listener=listener;
     }
 
@@ -53,6 +57,8 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
         return listStores.size();
     }
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvAddress;
         ImageView ivImage;
@@ -67,4 +73,39 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
     public interface StoreListener{
         public void onStoreClick(Store store);
     }
+
+    @Override
+    public Filter getFilter() {
+        return storeFilter;
+    }
+
+    private Filter storeFilter=new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+             ArrayList<Store> filterList=new ArrayList<>();
+             if(charSequence==null||charSequence.length()==0)
+             {
+                 filterList.addAll(listStoresFull);
+             }
+             else
+             {
+                 String filterString=charSequence.toString().toLowerCase().trim();
+                 for(Store item: listStoresFull)
+                 {
+                     if(item.getName().toLowerCase().contains(filterString))
+                         filterList.add(item);
+                 }
+             }
+             FilterResults results=new FilterResults();
+             results.values=filterList;
+             return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            listStores.clear();
+            listStores.addAll((ArrayList)filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 }
