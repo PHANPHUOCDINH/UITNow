@@ -4,6 +4,7 @@ import com.google.firebase.firestore.GeoPoint;
 
 public class OrderRequest {
     public String id;
+    public String idOrder;
     public String userId;
     public String userName;
     public GeoPoint userLocation;
@@ -21,8 +22,9 @@ public class OrderRequest {
         super();
     }
 
-    public OrderRequest(String id, String userId, String userName, GeoPoint userLocation, String userAddress, String storeName, GeoPoint storeLocation, String storeAddress, String driverId,String driverName, GeoPoint driverLocation, String total, int status) {
+    public OrderRequest(String id,String idOrder, String userId, String userName, GeoPoint userLocation, String userAddress, String storeName, GeoPoint storeLocation, String storeAddress, String driverId,String driverName, GeoPoint driverLocation, String total, int status) {
         this.id = id;
+        this.idOrder=idOrder;
         this.userId = userId;
         this.userName = userName;
         this.userLocation = userLocation;
@@ -139,5 +141,13 @@ public class OrderRequest {
 
     public void setDriverName(String driverName) {
         this.driverName = driverName;
+    }
+
+    public String getIdOrder() {
+        return idOrder;
+    }
+
+    public void setIdOrder(String idOrder) {
+        this.idOrder = idOrder;
     }
 }

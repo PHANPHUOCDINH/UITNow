@@ -1,5 +1,6 @@
 package com.uit.uitnow;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,11 +27,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrderFragment extends Fragment implements OrderAdapter.OrderListener {
+public class OrderFragment extends Fragment implements OrderAdapter.OrderListener,SwipeRefreshLayout.OnRefreshListener {
     RecyclerView rvOrders;
     OrderAdapter adapter;
     ArrayList<Order> orders=new ArrayList<>();
@@ -45,12 +48,7 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         View view = inflater.inflate(R.layout.order_fragment, container, false);
         rvOrders=view.findViewById(R.id.rvOrders);
         swipeOrders=view.findViewById(R.id.swipeOrders);
-        swipeOrders.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                showOrders();
-            }
-        });
+        swipeOrders.setOnRefreshListener(this);
         return view;
     }
 
@@ -72,30 +70,74 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
 
     @Override
     public void onCancelBooking(Order order) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("trangThai", "Cancel");
-        DocumentReference washingtonRef = db.collection("orders").document(order.id);
-// cập nhật field “capital” của document “DC”
-        washingtonRef
-                .update(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//        db.collection("Orders").document(order.id).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                swipeOrders.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        swipeOrders.setRefreshing(true);
+//                        showOrders();
+//                    }
+//                });
+//            }
+//        });
+        db.collection("Orders").document(order.getId()).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                db.collection("Requests").document(app.request.id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getActivity(),"Đã hủy",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(),"Cập nhật thất bại",Toast.LENGTH_SHORT).show();
+                    public void onComplete(@NonNull Task<Void> task) {
+                        swipeOrders.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeOrders.setRefreshing(true);
+                                showOrders();
+                            }
+                        });
                     }
                 });
-        adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     public void onXemChiTiet(Order order) {
         getItemFromOrder(order);
+    }
+
+    @Override
+    public void onReOrder(final Order order) {
+        db.collection("Orders").document(order.getId()).update("trangThai","Booking").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                app.request = new OrderRequest();
+                app.request.userId = app.user.id;
+                app.request.userName = app.user.name;
+                app.request.userAddress = app.user.address;
+                app.request.userLocation=app.location;
+                app.request.storeName = order.storeName;
+                app.request.storeAddress = order.getStoreAddress();
+                app.request.storeLocation=order.storeLocation;
+                app.request.total = app.basket.getTotalPrice();
+                app.request.idOrder=app.order.getId();
+
+                db.collection("Requests").add(app.request).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        app.requestId = documentReference.getId();
+                        Log.e("Test:",   " request id: " + app.requestId);
+                        app.request.id = documentReference.getId();
+                        PrefUtil.savePref(getActivity(), "request_id", app.requestId);
+                        updateRequestId();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+            }
+        });
     }
 
     private void showOrders()
@@ -149,4 +191,24 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         });
     }
 
+    @Override
+    public void onRefresh() {
+        showOrders();
+    }
+
+    private void updateRequestId() {
+        db.collection("Requests").document(app.requestId).set(app.request).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                openOrderTrackingActivity();
+            }
+        });
+    }
+
+    public void openOrderTrackingActivity() {
+        Intent intent = new Intent(getActivity(), OrderTrackingActivity.class);
+        startActivity(intent);
+        EventBus.getDefault().postSticky(new MessageEvent(app.request.storeLocation,MessageEvent.FROM_storeACT_TO_trackingACT));
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
 }

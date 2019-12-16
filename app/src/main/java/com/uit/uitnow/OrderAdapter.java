@@ -19,6 +19,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public interface OrderListener {
         void onCancelBooking(Order order);
         void onXemChiTiet(Order order);
+        void onReOrder(Order order);
     }
     public OrderAdapter(List<Order> mOrders,OrderListener listener,Context context) {
         this.context=context;
@@ -44,22 +45,31 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         holder.tvDestination.setText(order.deliveryAddress);
         holder.tvTotalPrices.setText(order.tongGia);
         String trangThai=order.trangThai;
-        if(trangThai.equals("Cancel"))
+        if(trangThai.equals("Cancelled"))
         {
-            holder.tvTrangThai.setTextColor(context.getResources().getColor(R.color.colorRed));
             holder.btnCancelBooking.setVisibility(View.GONE);
+            holder.btnReOrder.setVisibility(View.VISIBLE);
         }
         else
         {
-            holder.tvTrangThai.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+            if(trangThai.equals("Booking")) {
+                holder.btnCancelBooking.setVisibility(View.VISIBLE);
+                holder.btnReOrder.setVisibility(View.GONE);
+            }
+            else
+            {
+                if(trangThai.equals("Finished"))
+                {
+                    holder.btnCancelBooking.setVisibility(View.GONE);
+                    holder.btnReOrder.setVisibility(View.GONE);
+                }
+            }
         }
         holder.tvTrangThai.setText(trangThai);
         holder.btnCancelBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.tvTrangThai.setTextColor(context.getResources().getColor(R.color.colorRed));
                 mListener.onCancelBooking(order);
-                holder.btnCancelBooking.setVisibility(View.GONE);
             }
         });
         holder.btnChiTiet.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +87,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvId, tvRestaurant,tvDestination,tvTotalPrices,tvTrangThai;
-        Button btnCancelBooking,btnChiTiet;
+        Button btnCancelBooking,btnChiTiet,btnReOrder;
         public ViewHolder(View itemView) {
             super(itemView);
             tvId = itemView.findViewById(R.id.tvOrderId) ;
@@ -87,6 +97,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             tvTrangThai=itemView.findViewById(R.id.tvTrangThai);
             btnCancelBooking = itemView.findViewById(R.id.btnCancelBooking);
             btnChiTiet=itemView.findViewById(R.id.btnChiTiet);
+            btnReOrder=itemView.findViewById(R.id.btnReOrder);
         }
     }
 }

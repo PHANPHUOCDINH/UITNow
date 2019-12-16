@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,13 +20,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.SetOptions;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,7 +90,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
         btnCancelBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //cancelBookingOrder(app.order.id);
+                cancelBookingOrder();
             }
         });
         tvDriverName = findViewById(R.id.tvDriverName);
@@ -161,21 +165,18 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                     if (app.request.status == OrderRequestStatus.REQUESTING) {
                         displayOrderRequest();
                     } else if (app.request.status == OrderRequestStatus.ACCEPTED) {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("driverName",app.request.driverName);
+                        db.collection("Orders").document(app.request.idOrder).set(data,SetOptions.merge());
                         tvOnTheWay.setTextColor(getResources().getColor(R.color.colorPrimary));
                         displayDriverInfo();
                         placeDriverMarkerOnMap();
                     } else if (app.request.status == OrderRequestStatus.CANCELED_BY_DRIVER) {
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("driverName", null);
-                        data.put("driverId", null);
-                        data.put("driverLocation",null);
-                        docRef.update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
                                 driverCancel();
-                            }
-                        });
                     } else if (app.request.status == OrderRequestStatus.FINISHED) {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("trangThai","Finished");
+                        db.collection("Orders").document(app.request.idOrder).set(data, SetOptions.merge());
                         tvOnTheWay.setTextColor(getResources().getColor(R.color.colorBlack));
                         tvOnTheWay.setText("Order is finished");
                     }
@@ -203,5 +204,20 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
     {
         tvOnTheWay.setTextColor(getResources().getColor(R.color.colorRed));
         tvOnTheWay.setText("Order was canceled by driver");
+    }
+
+    private void cancelBookingOrder()
+    {
+        db.collection("Orders").document(app.order.getId()).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                db.collection("Requests").document(app.request.id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        finish();
+                    }
+                });
+            }
+        });
     }
 }

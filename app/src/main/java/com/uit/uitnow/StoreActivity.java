@@ -158,12 +158,13 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         app.request = new OrderRequest();
         app.request.userId = app.user.id;
         app.request.userName = app.user.name;
-        app.request.userAddress = PrefUtil.loadPref(this,"address");
+        app.request.userAddress = app.user.address;
         app.request.userLocation=app.location;
         app.request.storeName = this.store.name;
         app.request.storeAddress = this.store.address;
         app.request.storeLocation=store;
         app.request.total = app.basket.getTotalPrice();
+        app.request.idOrder=app.order.getId();
 
         db.collection("Requests").add(app.request).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

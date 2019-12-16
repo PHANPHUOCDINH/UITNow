@@ -61,6 +61,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
     public final static int PICK_PHOTO_REQUEST_CODE = 1046;
     Dialog dialog;
     File photoFile;
+    App app;
 
     CircleImageView ivAvatar;
     TextView tvEmail,tvAddress;
@@ -99,6 +100,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
         String photoPath=PrefUtil.loadPref(getActivity(),"photo");
         if(!photoPath.isEmpty())
             Picasso.get().load(PrefUtil.loadPref(getActivity(), "photo")).into(ivAvatar);
+        app=(App)getActivity().getApplication();
         return view;
     }
 
@@ -153,6 +155,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+                                    app.user.setName(name);
+                                    app.user.setPhone(phone);
+                                    app.user.setAddress(address);
                                     Toast.makeText(getActivity(),"Đã cập nhật",Toast.LENGTH_SHORT).show();
                                     PrefUtil.savePref(getActivity(),"name",name);
                                     PrefUtil.savePref(getActivity(),"phone",phone);

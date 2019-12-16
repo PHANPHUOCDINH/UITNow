@@ -1,9 +1,12 @@
 package com.uit.uitnow;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,25 +44,26 @@ import java.util.ArrayList;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
-public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreListener {
+public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreListener, LocationListener {
     App app;
     RecyclerView rvStores;
     StoreAdapter storeAdapter;
-    ArrayList<Store> listStores=new ArrayList<>();
+    ArrayList<Store> listStores = new ArrayList<>();
     SwipeRefreshLayout swipeStores;
     TextView tvMyAddress;
     AppCompatSpinner spinner;
     FirebaseFirestore db;
     Button btnTimKiem;
     SearchView txtTimKiem;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.orderfood_fragment, container, false);
-        tvMyAddress=view.findViewById(R.id.tvMyAddress);
+        tvMyAddress = view.findViewById(R.id.tvMyAddress);
         rvStores = view.findViewById(R.id.rvStores);
-        swipeStores=view.findViewById(R.id.swipeStores);
-        txtTimKiem=view.findViewById(R.id.txtTimKiem);
+        swipeStores = view.findViewById(R.id.swipeStores);
+        txtTimKiem = view.findViewById(R.id.txtTimKiem);
         txtTimKiem.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -84,7 +89,7 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        app=(App)getActivity().getApplication();
+        app = (App) getActivity().getApplication();
     }
 
     @Override
@@ -100,19 +105,18 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         }
     }
 
-    private void showStores()
-    {
+    private void showStores() {
         listStores.clear();
-        db= FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         db.collection("Stores").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Store s=document.toObject(Store.class);
+                        Store s = document.toObject(Store.class);
                         listStores.add(s);
                     }
-                    storeAdapter = new StoreAdapter(listStores,OrderFoodFragment.this);
+                    storeAdapter = new StoreAdapter(listStores, OrderFoodFragment.this);
                     rvStores.setAdapter(storeAdapter);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                     rvStores.setLayoutManager(layoutManager);
@@ -130,8 +134,8 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         locationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location!=null) {
-                    //Log.e("Test", "Location Success " + String.valueOf(location.getLatitude()));
+                if (location != null) {
+                    Log.e("Test", "Location Success " + String.valueOf(location.getLatitude()));
                     onLocationChanged(location);
                 }
 
@@ -139,18 +143,34 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("Test","Location Failed");
+                Log.e("Test", "Location Failed");
                 e.printStackTrace();
             }
         });
     }
 
-    private void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {
         GeoPoint geoPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
         app.location=geoPoint;
         String address=LocationServiceTask.getAddressFromLatLng(getActivity(),geoPoint);
         tvMyAddress.setText("Delivery to: "+ address);
         PrefUtil.savePref(getActivity(),"address",address);
+        app.user.setAddress(address);
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
     }
 
     @Override

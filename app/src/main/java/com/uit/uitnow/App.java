@@ -13,6 +13,7 @@ public class App extends Application {
     Order order;
     OrderRequest request;
     String requestId;
+    String currentAddress;
     @Override
     public void onCreate() {
         super.onCreate();

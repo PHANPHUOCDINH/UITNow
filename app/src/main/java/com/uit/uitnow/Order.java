@@ -12,10 +12,12 @@ public class Order {
     Basket basket;
     String deliveryAddress;
     String storeName;
+    String storeAddress;
     String tongGia;
     GeoPoint storeLocation;
     GeoPoint deliveryLocation;
     GeoPoint driverLocation;
+    String driverName;
     public Order()
     {
 
@@ -113,5 +115,19 @@ public class Order {
         this.driverLocation = driverLocation;
     }
 
+    public String getDriverName() {
+        return driverName;
+    }
 
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
+
+    public String getStoreAddress() {
+        return storeAddress;
+    }
+
+    public void setStoreAddress(String storeAddress) {
+        this.storeAddress = storeAddress;
+    }
 }

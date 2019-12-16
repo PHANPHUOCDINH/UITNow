@@ -92,8 +92,9 @@ public class BasketDialogFragment extends DialogFragment implements ItemBasketAd
                 app.order = new Order(String.valueOf(l),PrefUtil.loadPref(getActivity(),"id"),basket, PrefUtil.loadPref(getActivity(),"address"), ((StoreActivity) getActivity()).store.name, app.location, geoPoint);
                 Map<String, Object> data = new HashMap<>();
                 data.put("id", String.valueOf(l));
+                data.put("storeAddress",((StoreActivity) getActivity()).store.getAddress());
                 data.put("idKhachHang", PrefUtil.loadPref(getActivity(),"id"));
-                data.put("storeName", ((StoreActivity) getActivity()).store.name);
+                data.put("storeName", ((StoreActivity) getActivity()).store.getName());
                 data.put("deliveryAddress", PrefUtil.loadPref(getActivity(),"address"));
                 data.put("tongGia", String.valueOf(app.basket.totalPrice));
                 data.put("trangThai", app.order.trangThai);

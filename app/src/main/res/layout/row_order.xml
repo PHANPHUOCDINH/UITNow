@@ -119,6 +119,7 @@
                 android:src="@drawable/ic_driver" />
 
             <TextView
+                android:layout_centerVertical="true"
                 android:id="@+id/tvDriverName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,16 +130,6 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tvDriverName"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/ivDriver"
-                android:text="53N1 - 1234"
-                android:textColor="@color/colorLightBlack"
-                android:textSize="16sp" />
             <Button
                 android:id="@+id/btnChiTiet"
                 android:textSize="18sp"
@@ -156,6 +147,16 @@
             android:layout_margin="10dp"
             android:background="@color/colorRed"
             android:text="Hủy đặt món"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btnReOrder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/colorPrimary"
+            android:text="Đặt lại"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite" />
         <View
