@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Đang tìm tài xế…"
+            android:text="Đang tìm shipper…"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             android:textStyle="normal" />
@@ -131,21 +131,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Driver on the way"
+            android:text="Shipper đang đến"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             android:textStyle="normal" />
 
         <TextView
             android:id="@+id/tvDriverName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Driver: "
+            android:text="Shipper: "
             android:textColor="@color/colorBlack"
             android:textSize="16sp"
             android:layout_below="@id/tvOnTheWay"
             android:layout_marginTop="5dp"
-            android:textStyle="normal" />
-
+            android:textStyle="normal"
+            android:layout_alignLeft="@id/tvOnTheWay"/>
+        <ImageButton
+            android:id="@+id/btnCall"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_phone"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_below="@id/tvOnTheWay"
+            android:layout_alignRight="@id/tvOnTheWay"/>
     </RelativeLayout>
 </FrameLayout>

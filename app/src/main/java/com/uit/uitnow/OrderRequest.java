@@ -16,6 +16,7 @@ public class OrderRequest {
     public String driverName;
     public GeoPoint driverLocation;
     public String total;
+    public String driverPhone;
     public int status = OrderRequestStatus.REQUESTING;
 
     public OrderRequest() {
@@ -149,5 +150,13 @@ public class OrderRequest {
 
     public void setIdOrder(String idOrder) {
         this.idOrder = idOrder;
+    }
+
+    public String getDriverPhone() {
+        return driverPhone;
+    }
+
+    public void setDriverPhone(String driverPhone) {
+        this.driverPhone = driverPhone;
     }
 }

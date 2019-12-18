@@ -23,7 +23,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -50,12 +52,6 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         swipeOrders=view.findViewById(R.id.swipeOrders);
         swipeOrders.setOnRefreshListener(this);
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getRequest();
     }
 
     @Override
@@ -211,4 +207,5 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         EventBus.getDefault().postSticky(new MessageEvent(app.request.storeLocation,MessageEvent.FROM_storeACT_TO_trackingACT));
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
+
 }

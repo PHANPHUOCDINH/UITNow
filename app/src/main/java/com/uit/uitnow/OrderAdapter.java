@@ -1,6 +1,7 @@
 package com.uit.uitnow;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +48,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         String trangThai=order.trangThai;
         if(trangThai.equals("Cancelled"))
         {
+            holder.tvTrangThai.setTextColor(context.getResources().getColor(R.color.colorRed));
             holder.btnCancelBooking.setVisibility(View.GONE);
             holder.btnReOrder.setVisibility(View.VISIBLE);
         }
         else
         {
             if(trangThai.equals("Booking")) {
+                holder.tvTrangThai.setTextColor(context.getResources().getColor(R.color.colorOrange));
                 holder.btnCancelBooking.setVisibility(View.VISIBLE);
                 holder.btnReOrder.setVisibility(View.GONE);
             }
@@ -60,6 +63,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             {
                 if(trangThai.equals("Finished"))
                 {
+                    holder.tvTrangThai.setTextColor(context.getResources().getColor(R.color.colorPrimary));
                     holder.btnCancelBooking.setVisibility(View.GONE);
                     holder.btnReOrder.setVisibility(View.GONE);
                 }
@@ -76,6 +80,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             @Override
             public void onClick(View view) {
                 mListener.onXemChiTiet(order);
+            }
+        });
+        holder.btnReOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onReOrder(order);
             }
         });
     }

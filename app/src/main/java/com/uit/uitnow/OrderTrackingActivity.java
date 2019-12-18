@@ -1,17 +1,24 @@
 package com.uit.uitnow;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,6 +53,8 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
     Button btnCancelBooking;
     FirebaseFirestore db;
     GeoPoint store,delivery;
+    ImageButton btnCall;
+    static final int CALL_REQUEST=101;
     @Override
     protected void onStart() {
         super.onStart();
@@ -96,6 +105,27 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
         tvDriverName = findViewById(R.id.tvDriverName);
         tvOnTheWay = findViewById(R.id.tvOnTheWay);
         delivery=app.location;
+        btnCall=findViewById(R.id.btnCall);
+        btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(ContextCompat.checkSelfPermission(OrderTrackingActivity.this, Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED)
+                {
+                    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)
+                    {
+                        requestPermissions(new String[]{Manifest.permission.CALL_PHONE},CALL_REQUEST);
+                    }
+                    return;
+                }
+                String txtcall="tel:"+app.request.getDriverPhone();
+                Intent callIntent=new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse(txtcall));
+                if(callIntent.resolveActivity(getPackageManager())!=null)
+                {
+                    startActivity(callIntent);
+                }
+            }
+        });
     }
 
     @Override
@@ -122,7 +152,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                 BitmapFactory.decodeResource(getResources(),R.drawable.ic_marker)));
         options.title(app.order.storeName);
         map.addMarker(options);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(store.getLatitude(),store.getLongitude()),18));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(store.getLatitude(),store.getLongitude()),14));
        // map.moveCamera(CameraUpdateFactory.newLatLngZoom(app.order.storeLocation, 20));
     }
 
@@ -132,7 +162,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                 BitmapFactory.decodeResource(getResources(), R.drawable.ic_motor)));
         options.title(app.request.driverName);
         map.addMarker(options);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(app.request.driverLocation.getLatitude(),app.request.driverLocation.getLongitude()),18));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(app.request.driverLocation.getLatitude(),app.request.driverLocation.getLongitude()),14));
     }
 
     @Override
@@ -161,6 +191,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
 
                 if (snapshot != null && snapshot.exists()) {
                     Log.e("Test", "Current data: " + snapshot.getData());
+                    OrderRequest tempRequest=app.request;
                     app.request = snapshot.toObject(OrderRequest.class);
                     if (app.request.status == OrderRequestStatus.REQUESTING) {
                         displayOrderRequest();
@@ -180,6 +211,10 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                         tvOnTheWay.setTextColor(getResources().getColor(R.color.colorBlack));
                         tvOnTheWay.setText("Order is finished");
                     }
+                    else if(app.request.driverLocation.getLatitude()!=tempRequest.driverLocation.getLatitude()||app.request.driverLocation.getLongitude()!=tempRequest.driverLocation.getLongitude())
+                    {
+                        placeDriverMarkerOnMap();
+                    }
                 } else {
                     Log.e("Test", "Current data: null");
                 }
@@ -197,7 +232,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
     private void displayDriverInfo() {
         layoutRequesting.setVisibility(View.GONE);
         layoutOnTheWay.setVisibility(View.VISIBLE);
-        tvDriverName.setText("Driver: " + app.request.driverName);
+        tvDriverName.setText("Shipper: " + app.request.driverName);
     }
 
     private void driverCancel()
