@@ -1,6 +1,8 @@
 package com.uit.uitnow;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -10,13 +12,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -167,8 +172,36 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public void onBackPressed() {
-        finish();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Xác nhận");
+        builder.setMessage("Bạn muốn hủy đơn hàng?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                db.collection("Orders").document(app.request.idOrder).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        db.collection("Requests").document(app.request.id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                finish();
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            }
+                        });
+                    }
+                });
+
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        AlertDialog dialog=builder.create();
+        dialog.show();
     }
 
 //    private void cancelBookingOrder(String id)
@@ -196,6 +229,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                     if (app.request.status == OrderRequestStatus.REQUESTING) {
                         displayOrderRequest();
                     } else if (app.request.status == OrderRequestStatus.ACCEPTED) {
+                        NotificationTask.createNotification(OrderTrackingActivity.this,(int)System.currentTimeMillis(),R.drawable.ic_notification,"Đơn hàng đã được nhận","Đơn hàng "+app.request.getIdOrder()+" đã được shipper "+app.request.getDriverName()+" nhận");
                         Map<String, Object> data = new HashMap<>();
                         data.put("driverName",app.request.driverName);
                         db.collection("Orders").document(app.request.idOrder).set(data,SetOptions.merge());
@@ -205,11 +239,22 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                     } else if (app.request.status == OrderRequestStatus.CANCELED_BY_DRIVER) {
                                 driverCancel();
                     } else if (app.request.status == OrderRequestStatus.FINISHED) {
+                        NotificationTask.createNotification(OrderTrackingActivity.this,(int)System.currentTimeMillis(),R.drawable.ic_notification,"Đơn hàng đã hoàn tất","Đơn hàng "+app.request.getIdOrder()+" đã được hoàn tất");
                         Map<String, Object> data = new HashMap<>();
                         data.put("trangThai","Finished");
-                        db.collection("Orders").document(app.request.idOrder).set(data, SetOptions.merge());
-                        tvOnTheWay.setTextColor(getResources().getColor(R.color.colorBlack));
-                        tvOnTheWay.setText("Order is finished");
+                        db.collection("Orders").document(app.request.idOrder).set(data, SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                db.collection("Requests").document(app.request.id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        tvOnTheWay.setTextColor(getResources().getColor(R.color.colorBlack));
+                                        tvOnTheWay.setText("Order is finished");
+                                        showRateDialog();
+                                    }
+                                });
+                            }
+                        });
                     }
                     else if(app.request.driverLocation.getLatitude()!=tempRequest.driverLocation.getLatitude()||app.request.driverLocation.getLongitude()!=tempRequest.driverLocation.getLongitude())
                     {
@@ -255,4 +300,49 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
             }
         });
     }
+
+    private void showRateDialog()
+    {
+        final Dialog dialog=new Dialog(this);
+        dialog.setContentView(R.layout.rating_dialog);
+        RatingBar ratingBar=dialog.findViewById(R.id.ratingBar);
+        final TextView txtRatingDetail=dialog.findViewById(R.id.txtRateDetail);
+        Button btnSubmitRate=dialog.findViewById(R.id.btnRate);
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                switch ((int)ratingBar.getRating())
+                {
+                    case 1:
+                        txtRatingDetail.setText("Very bad");
+                        break;
+                    case 2:
+                        txtRatingDetail.setText("Bad");
+                        break;
+                    case 3:
+                        txtRatingDetail.setText("Good");
+                        break;
+                    case 4:
+                        txtRatingDetail.setText("Great");
+                        break;
+                    case 5:
+                        txtRatingDetail.setText("Awesome. I love it");
+                        break;
+                    default:
+                        txtRatingDetail.setText("");
+                }
+            }
+        });
+        btnSubmitRate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+    }
+
+
 }

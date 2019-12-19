@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -115,9 +116,8 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
                 app.request.storeName = order.storeName;
                 app.request.storeAddress = order.getStoreAddress();
                 app.request.storeLocation=order.storeLocation;
-                app.request.total = app.basket.getTotalPrice();
-                app.request.idOrder=app.order.getId();
-
+                app.request.total = order.getTongGia()+ " VND";
+                app.request.idOrder=order.getId();
                 db.collection("Requests").add(app.request).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -159,11 +159,6 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
                 }
             }
         });
-    }
-
-    private void getRequest()
-    {
-
     }
 
     private void getItemFromOrder(Order order)

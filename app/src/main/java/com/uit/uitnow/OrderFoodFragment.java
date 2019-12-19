@@ -137,6 +137,9 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
                 if (location != null) {
                     Log.e("Test", "Location Success " + String.valueOf(location.getLatitude()));
                     onLocationChanged(location);
+                } else
+                {
+                    Log.e("Test", "Location null ");
                 }
 
             }

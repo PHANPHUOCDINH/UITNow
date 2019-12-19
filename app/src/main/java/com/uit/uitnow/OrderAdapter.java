@@ -6,15 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder>  {
     private Context context;
+    private List<Order> mOrdersFull;
     private List<Order> mOrders;
     private OrderListener mListener;
     public interface OrderListener {
@@ -25,6 +29,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public OrderAdapter(List<Order> mOrders,OrderListener listener,Context context) {
         this.context=context;
         this.mOrders = mOrders;
+        this.mOrdersFull=new ArrayList<>(mOrders);
         this.mListener=listener;
     }
 
@@ -110,5 +115,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             btnReOrder=itemView.findViewById(R.id.btnReOrder);
         }
     }
+
 }
 

@@ -20,7 +20,6 @@
             android:text="Order ID: 1234"
             android:textColor="@color/colorBlack"
             android:textSize="16sp" />
-
         <TextView
             android:id="@+id/tvRestaurant"
             android:layout_width="match_parent"
