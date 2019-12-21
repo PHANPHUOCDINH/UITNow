@@ -62,9 +62,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
     Dialog dialog;
     File photoFile;
     App app;
-
     CircleImageView ivAvatar;
-    TextView tvEmail,tvAddress;
+    TextView tvEmail,tvAddress,txtSeeVouchers;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
     FirebaseFirestore db;
@@ -93,6 +92,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
         tvAddress=view.findViewById(R.id.tvAddress);
         txtName=view.findViewById(R.id.tvName);
         txtPhone=view.findViewById(R.id.tvPhone);
+        txtSeeVouchers=view.findViewById(R.id.txtSeeVouchers);
+        txtSeeVouchers.setOnClickListener(this);
         tvAddress.setText(PrefUtil.loadPref(getActivity(),"address"));
         txtName.setText(PrefUtil.loadPref(getActivity(),"name"));
         txtPhone.setText(PrefUtil.loadPref(getActivity(),"phone"));
@@ -176,6 +177,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
                     if(id==R.id.btnChangePassword)
                     {
                         showChangePasswordDialog();
+                    }
+                    else
+                    {
+                        if(id==R.id.txtSeeVouchers)
+                        {
+                            VoucherDialogFragment dialog = new VoucherDialogFragment();
+                            dialog.show(getActivity().getSupportFragmentManager(), "voucher_dialog");
+                        }
                     }
                 }
             }

@@ -44,9 +44,9 @@ public class ItemBasketAdapter extends RecyclerView.Adapter<ItemBasketAdapter.Vi
         viewHolder.btnSubtract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // 1
-                itemBasket.decrease();
-                updateStats(viewHolder, itemBasket);
-                mListener.onChangeItemQuantity(itemBasket);
+                    itemBasket.decrease();
+                    updateStats(viewHolder, itemBasket);
+                    mListener.onChangeItemQuantity(itemBasket);
             }
         });
         viewHolder.btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -85,4 +85,5 @@ public class ItemBasketAdapter extends RecyclerView.Adapter<ItemBasketAdapter.Vi
         viewHolder.tvPrice.setText(String.valueOf(item.getPrice())+" VND");
         viewHolder.tvSum.setText(item.getSum());
     }
+
 }

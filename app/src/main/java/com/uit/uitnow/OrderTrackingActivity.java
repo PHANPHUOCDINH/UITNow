@@ -58,7 +58,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
     Button btnCancelBooking;
     FirebaseFirestore db;
     GeoPoint store,delivery;
-    ImageButton btnCall;
+    ImageButton btnCall,btnChat;
     static final int CALL_REQUEST=101;
     @Override
     protected void onStart() {
@@ -97,9 +97,9 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
         tvStatus = findViewById(R.id.tvStatus);
         layoutRequesting = findViewById(R.id.layoutRequesting);
         layoutOnTheWay = findViewById(R.id.layoutOnTheWay);
-        tvDelivery.setText(app.order.deliveryAddress);
-        tvStore.setText(app.order.storeName);
-        tvTotal.setText(app.order.basket.getTotalPrice());
+        tvDelivery.setText(app.request.userAddress);
+        tvStore.setText(app.request.storeName);
+        tvTotal.setText(app.request.getTotal());
         btnCancelBooking=findViewById(R.id.btnCancel);
         btnCancelBooking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +131,13 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                 }
             }
         });
+        btnChat=findViewById(R.id.btnChat);
+        btnChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openChat();
+            }
+        });
     }
 
     @Override
@@ -155,7 +162,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
         MarkerOptions options = new MarkerOptions().position(new LatLng(store.getLatitude(),store.getLongitude()));
         options.icon(BitmapDescriptorFactory.fromBitmap(
                 BitmapFactory.decodeResource(getResources(),R.drawable.ic_marker)));
-        options.title(app.order.storeName);
+        options.title(app.request.storeName);
         map.addMarker(options);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(store.getLatitude(),store.getLongitude()),14));
        // map.moveCamera(CameraUpdateFactory.newLatLngZoom(app.order.storeLocation, 20));
@@ -288,7 +295,7 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
 
     private void cancelBookingOrder()
     {
-        db.collection("Orders").document(app.order.getId()).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
+        db.collection("Orders").document(app.request.getIdOrder()).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 db.collection("Requests").document(app.request.id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -344,5 +351,8 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
         dialog.show();
     }
 
-
+    private void openChat() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
+    }
 }

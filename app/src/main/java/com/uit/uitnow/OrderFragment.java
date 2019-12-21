@@ -66,7 +66,7 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
     }
 
     @Override
-    public void onCancelBooking(Order order) {
+    public void onCancelBooking(final Order order) {
 //        db.collection("Orders").document(order.id).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
 //            @Override
 //            public void onComplete(@NonNull Task<Void> task) {
@@ -82,16 +82,31 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         db.collection("Orders").document(order.getId()).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                db.collection("Requests").document(app.request.id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                db.collection("Requests").whereEqualTo("idOrder",order.getId()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        swipeOrders.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                swipeOrders.setRefreshing(true);
-                                showOrders();
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            OrderRequest request=null;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                request = document.toObject(OrderRequest.class);
                             }
-                        });
+                            db.collection("Requests").document(request.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    swipeOrders.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            swipeOrders.setRefreshing(true);
+                                            showOrders();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        else {
+                            Log.d("Test", "Error getting documents: ", task.getException());
+                        }
+
                     }
                 });
             }
@@ -118,6 +133,7 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
                 app.request.storeLocation=order.storeLocation;
                 app.request.total = order.getTongGia()+ " VND";
                 app.request.idOrder=order.getId();
+                app.request.userPhone=app.user.phone;
                 db.collection("Requests").add(app.request).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -191,7 +207,7 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         db.collection("Requests").document(app.requestId).set(app.request).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                openOrderTrackingActivity();
+                        openOrderTrackingActivity();
             }
         });
     }
@@ -203,4 +219,9 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        showOrders();
+    }
 }

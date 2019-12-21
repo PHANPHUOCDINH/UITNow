@@ -121,7 +121,10 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         if(view.getId()==R.id.layoutViewBasket)
         {
             if (app.basket.getTotalItem() > 0) {
-                BasketDialogFragment dialog = new BasketDialogFragment(app.basket);
+                BasketDialogFragment dialog = new BasketDialogFragment();
+                app.basket.calculateBasket();
+                tvTotalPrices.setText(app.basket.getTotalPrice());
+                tvTotalItems.setText(app.basket.getTotalItem() + "");
                 dialog.show(getSupportFragmentManager(), "basket_dialog");
             } else {
                 Toast.makeText(this, "Giỏ hàng đang trống",
@@ -165,7 +168,7 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         app.request.storeLocation=store;
         app.request.total = app.basket.getTotalPrice();
         app.request.idOrder=app.order.getId();
-
+        app.request.userPhone=app.user.phone;
         db.collection("Requests").add(app.request).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -186,7 +189,7 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         db.collection("Requests").document(app.requestId).set(app.request).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                openOrderTrackingActivity();
+                        openOrderTrackingActivity();
             }
         });
     }

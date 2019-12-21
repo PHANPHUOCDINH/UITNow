@@ -155,5 +155,14 @@
             android:layout_height="45dp"
             android:layout_below="@id/tvOnTheWay"
             android:layout_alignRight="@id/tvOnTheWay"/>
+        <ImageButton
+            android:layout_marginRight="15dp"
+            android:id="@+id/btnChat"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/icon_chat"
+            android:layout_width="45dp"
+            android:layout_height=  "45dp"
+            android:layout_below="@id/tvOnTheWay"
+            android:layout_toLeftOf="@id/btnCall"/>
     </RelativeLayout>
 </FrameLayout>

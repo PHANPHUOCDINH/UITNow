@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -13,10 +14,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -75,37 +81,22 @@ public class TestActivity extends AppCompatActivity {
 //                txtDate.setText("");
 //            }
 //        });
-        Dialog dialog=new Dialog(this);
-        dialog.setContentView(R.layout.rating_dialog);
-        RatingBar ratingBar=dialog.findViewById(R.id.ratingBar);
-        final TextView txtRatingDetail=dialog.findViewById(R.id.txtRateDetail);
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        db.collection("Vouchers").whereEqualTo("id","DISCOUNT20").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                switch ((int)ratingBar.getRating())
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful())
                 {
-                    case 1:
-                        txtRatingDetail.setText("Very bad");
-                        break;
-                    case 2:
-                        txtRatingDetail.setText("Bad");
-                        break;
-                    case 3:
-                        txtRatingDetail.setText("Good");
-                        break;
-                    case 4:
-                        txtRatingDetail.setText("Great");
-                        break;
-                    case 5:
-                        txtRatingDetail.setText("Awesome. I love it");
-                        break;
-                    default:
-                        txtRatingDetail.setText("");
+                    if(task.getResult().isEmpty())
+                        Toast.makeText(TestActivity.this,"Mã không hợp lệ",Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(TestActivity.this,"Mã hợp lệ",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Log.e("Test", "Error getting documents: ", task.getException());
                 }
             }
         });
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.show();
     }
 
 

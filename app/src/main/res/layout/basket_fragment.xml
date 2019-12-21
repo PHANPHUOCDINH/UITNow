@@ -22,8 +22,40 @@
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
+    <LinearLayout
+        android:gravity="right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@color/colorBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nhập mã giảm giá:"
+            android:layout_marginRight="10dp"/>
+    <EditText
+        android:layout_marginRight="10dp"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtCode"/>
+    <Button
+        android:id="@+id/btnCheckCode"
+        android:gravity="center"
+        android:text="Áp dụng"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
     <TextView
+        android:id="@+id/txtSeeVouchers"
+        android:textColor="@color/colorPrimary"
+        android:text="See My Vouchers"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_marginTop="5dp"
         android:id="@+id/tvTotal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,6 +65,15 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/txtTienGiam"
+        android:layout_gravity="right"
+        android:textSize="15sp"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textColor="@color/colorPrimary"/>
     <Button
         android:id="@+id/btnPlaceOrder"
         android:layout_width="match_parent"

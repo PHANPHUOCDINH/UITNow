@@ -7,6 +7,7 @@ public class OrderRequest {
     public String idOrder;
     public String userId;
     public String userName;
+    public String userPhone;
     public GeoPoint userLocation;
     public String userAddress;
     public String storeName;
@@ -158,5 +159,13 @@ public class OrderRequest {
 
     public void setDriverPhone(String driverPhone) {
         this.driverPhone = driverPhone;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 }

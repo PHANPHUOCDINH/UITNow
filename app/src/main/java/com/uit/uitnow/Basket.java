@@ -41,4 +41,9 @@ public class Basket {
     public HashMap<String, ItemBasket> getItems() {
         return items;
     }
+
+    public void removeItem(ItemBasket item)
+    {
+        items.remove(item.id);
+    }
 }

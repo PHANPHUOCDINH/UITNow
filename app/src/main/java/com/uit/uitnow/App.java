@@ -17,6 +17,7 @@ public class App extends Application {
     OrderRequest request;
     String requestId;
     String currentAddress;
+
     @Override
     public void onCreate() {
         super.onCreate();

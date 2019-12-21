@@ -28,7 +28,7 @@
         android:gravity="center"
         android:layout_below="@id/tvName"
         android:id="@+id/tvSlogan"
-        android:text="Order Food, Book Table"
+        android:text="Fast Order and Delivery Food"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <EditText
