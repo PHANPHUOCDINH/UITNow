@@ -2,6 +2,7 @@ package com.uit.uitnow;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -50,7 +51,10 @@ public class SignInActivity  extends AppCompatActivity {
             public void onClick(View v) {
                 String email=txtEmail.getText().toString();
                 String pass=txtPassword.getText().toString();
-                signIn(email,pass);
+                if(email.isEmpty()||pass.isEmpty())
+                    Toast.makeText(SignInActivity.this,"Không để trống thông tin",Toast.LENGTH_SHORT).show();
+                else
+                    signIn(email,pass);
             }
         });
 

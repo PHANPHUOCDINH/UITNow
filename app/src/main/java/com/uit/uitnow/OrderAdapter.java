@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -93,6 +94,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
                 mListener.onReOrder(order);
             }
         });
+        if(order.driverName!=null)
+        {
+            holder.tvDriverName.setText(order.getDriverName());
+        }
+        else
+        {
+            holder.tvDriverName.setText("");
+        }
     }
 
     @Override
@@ -101,7 +110,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvId, tvRestaurant,tvDestination,tvTotalPrices,tvTrangThai;
+        TextView tvId, tvRestaurant,tvDestination,tvTotalPrices,tvTrangThai,tvDriverName;
         Button btnCancelBooking,btnChiTiet,btnReOrder;
         public ViewHolder(View itemView) {
             super(itemView);
@@ -113,6 +122,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             btnCancelBooking = itemView.findViewById(R.id.btnCancelBooking);
             btnChiTiet=itemView.findViewById(R.id.btnChiTiet);
             btnReOrder=itemView.findViewById(R.id.btnReOrder);
+            tvDriverName=itemView.findViewById(R.id.tvDriverName);
         }
     }
 

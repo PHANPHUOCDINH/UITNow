@@ -154,11 +154,11 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
 
     private void showOrders()
     {
-        orders.clear();
         db.collection("Orders").whereEqualTo("idKhachHang",idUser).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    orders.clear();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Order o=document.toObject(Order.class);
                         Log.e("Test","Order "+o.id);
