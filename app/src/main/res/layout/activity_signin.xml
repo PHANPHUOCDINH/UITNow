@@ -1,47 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    >
 
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/icon_logo" />
+        android:src="@drawable/ic_shipper" />
 
     <TextView
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="35sp"
-        android:textColor="@color/colorPrimary"
-        android:layout_below="@id/ivLogo"
         android:id="@+id/tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"/>
+        android:layout_below="@id/ivLogo"
+        android:layout_marginTop="-2dp"
+        android:fontFamily="casual"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
     <TextView
         android:layout_marginBottom="15dp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@android:color/white"
         android:textSize="20sp"
         android:gravity="center"
         android:layout_below="@id/tvName"
         android:id="@+id/tvSlogan"
-        android:text="Fast Order and Delivery Food"
+        android:text="Order Food, Book Table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <EditText
-        android:inputType="textEmailAddress"
-        android:padding="25dp"
-        android:drawablePadding="15dp"
-        android:drawableLeft="@drawable/icon_email"
-        android:hint="Email"
-        android:layout_toLeftOf="@id/tvForgot"
-        android:layout_below="@id/tvSlogan"
+
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/txtEmail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvSlogan"
+        android:layout_toLeftOf="@id/tvForgot"
+        android:drawablePadding="15dp"
+        android:inputType="textEmailAddress"
+        android:padding="25dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:hint="Email"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight"
+        app:met_maxCharacters="32"
+        app:met_primaryColor="@android:color/white"
+        app:met_singleLineEllipsis="true"
+
+        />
 
     <TextView
         android:textSize="15sp"
@@ -56,10 +71,9 @@
         android:layout_marginRight="23dp"
         android:layout_marginBottom="20dp"
         android:text="Forgot?"
-        android:textColor="@color/colorPrimary" />
+        android:textColor="@android:color/white" />
 
-    <EditText
-        android:drawableLeft="@drawable/icon_lock"
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:inputType="textPassword"
         android:padding="25dp"
         android:drawablePadding="15dp"
@@ -68,7 +82,14 @@
         android:layout_below="@id/txtEmail"
         android:id="@+id/txtPassword"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
+        app:met_baseColor="@android:color/white"
+        app:met_floatingLabel="highlight"
+        app:met_maxCharacters="32"
+        app:met_primaryColor="@android:color/white"
+        app:met_singleLineEllipsis="true"/>
     <Button
         android:layout_marginTop="15dp"
         android:layout_alignParentLeft="true"
@@ -101,7 +122,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
-        android:textColor="@color/colorPrimary"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         android:layout_marginBottom="30dp"
         android:gravity="center"

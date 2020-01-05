@@ -17,10 +17,14 @@ import java.util.ArrayList;
 // nhà hàng đặt bàn
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder> {
     ArrayList<Restaurant> listRests;
-
-    public RestaurantAdapter(ArrayList<Restaurant> rests)
+    OnRestaurantClickListener listener;
+    public interface OnRestaurantClickListener{
+        void onRestaurantClick(Restaurant res);
+    }
+    public RestaurantAdapter(ArrayList<Restaurant> rests,OnRestaurantClickListener listener)
     {
         this.listRests=rests;
+        this.listener=listener;
     }
     @NonNull
     @Override
@@ -41,7 +45,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //click vào 1 nhà hàng
+                listener.onRestaurantClick(r);
             }
         });
     }

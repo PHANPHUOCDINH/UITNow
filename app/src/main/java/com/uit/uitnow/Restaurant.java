@@ -6,6 +6,24 @@ public class Restaurant {
     String name;
     String address;
     String openHours;
+    String phone;
+    String district;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
 
     public  String getId() {
         return id;

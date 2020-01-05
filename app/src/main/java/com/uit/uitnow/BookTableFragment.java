@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class BookTableFragment extends Fragment {
+public class BookTableFragment extends Fragment implements RestaurantAdapter.OnRestaurantClickListener {
     RecyclerView rvRests;
     RestaurantAdapter resAdapter;
     ArrayList<Restaurant> listRests=new ArrayList<>();
@@ -38,39 +39,79 @@ public class BookTableFragment extends Fragment {
         rvRests = view.findViewById(R.id.rvRestaurants);
         swipeRests=view.findViewById(R.id.swipeRestaurants);
         spinner=view.findViewById(R.id.spinnerDistrict);
-        String[] districts={"Quận 1","Quận 2","Quận 3","Quận 4","Quận 5"};
+        final String[] districts={"All","Q.1","Q.2","Q.3","Q.Phú Nhuận","Q.Gò Vấp"};
         ArrayAdapter<String> adapterDistrict=new ArrayAdapter<>(getActivity(),R.layout.support_simple_spinner_dropdown_item,districts);
         spinner.setAdapter(adapterDistrict);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                showRestaurants(districts[i]);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         swipeRests.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRests.setRefreshing(false);
             }
         });
-        showRestaurants();
+        showRestaurants("All");
         return view;
     }
 
-    private void showRestaurants()
+    private void showRestaurants(String district)
     {
         listRests.clear();
         db=FirebaseFirestore.getInstance();
-        db.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Restaurant r=document.toObject(Restaurant.class);
-                        listRests.add(r);
+        if(district.equals("All"))
+        {
+            db.collection("Restaurants").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Restaurant r = document.toObject(Restaurant.class);
+                            listRests.add(r);
+                        }
+                        resAdapter = new RestaurantAdapter(listRests, BookTableFragment.this);
+                        rvRests.setAdapter(resAdapter);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                        rvRests.setLayoutManager(layoutManager);
+                    } else {
+                        Log.d("Test", "Error getting documents: ", task.getException());
                     }
-                    resAdapter = new RestaurantAdapter(listRests);
-                    rvRests.setAdapter(resAdapter);
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                    rvRests.setLayoutManager(layoutManager);
-                } else {
-                    Log.d("CSC", "Error getting documents: ", task.getException());
                 }
-            }
-        });
+            });
+        }
+        else {
+            db.collection("Restaurants").whereEqualTo("district",district).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Restaurant r = document.toObject(Restaurant.class);
+                            listRests.add(r);
+                        }
+                        resAdapter = new RestaurantAdapter(listRests, BookTableFragment.this);
+                        rvRests.setAdapter(resAdapter);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                        rvRests.setLayoutManager(layoutManager);
+                    } else {
+                        Log.d("Test", "Error getting documents: ", task.getException());
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onRestaurantClick(Restaurant res) {
+        RestaurantActivity restaurantActivity = new RestaurantActivity();
+        restaurantActivity.setPhone(res.getPhone());
+        restaurantActivity.show(getFragmentManager(), "book restaurant");
     }
 }
