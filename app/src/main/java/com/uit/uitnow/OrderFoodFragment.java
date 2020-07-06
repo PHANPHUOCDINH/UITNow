@@ -24,6 +24,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -39,41 +40,36 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.greenrobot.eventbus.EventBus;
+import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
-public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreListener, LocationListener {
+public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreListener, LocationListener{
     App app;
     RecyclerView rvStores;
     StoreAdapter storeAdapter;
     ArrayList<Store> listStores = new ArrayList<>();
     SwipeRefreshLayout swipeStores;
     TextView tvMyAddress;
-    AppCompatSpinner spinner;
     FirebaseFirestore db;
-    Button btnTimKiem;
-    SearchView txtTimKiem;
-
+ //   Button btnTimKiem;
+    TextView txtTimKiem;
+ //   TwoWayView twoWayView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.orderfood_fragment, container, false);
+        //twoWayView=view.findViewById(R.id.listSearchHistory);
         tvMyAddress = view.findViewById(R.id.tvMyAddress);
         rvStores = view.findViewById(R.id.rvStores);
         swipeStores = view.findViewById(R.id.swipeStores);
-        txtTimKiem = view.findViewById(R.id.txtTimKiem);
-        txtTimKiem.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        txtTimKiem = view.findViewById(R.id.txtSearch);
+        txtTimKiem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+            public void onClick(View view) {
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                storeAdapter.getFilter().filter(newText);
-                return false;
             }
         });
         swipeStores.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -90,6 +86,30 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         app = (App) getActivity().getApplication();
+        Toast.makeText(getActivity(),String.valueOf(app.searchHistory.size()),Toast.LENGTH_SHORT).show();
+//        txtTimKiem.setOnSearchClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(app.searchHistory.size()>0) {
+//                    ListSearchHistoryAdapter mAdapter = new ListSearchHistoryAdapter(app.searchHistory, OrderFoodFragment.this);
+//                    twoWayView.setAdapter(mAdapter);
+//                    twoWayView.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
+//        txtTimKiem.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                app.searchHistory.add(newText);
+//                storeAdapter.getFilter().filter(newText);
+//                return false;
+//            }
+//        });
     }
 
     @Override
@@ -106,6 +126,7 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
     }
 
     private void showStores() {
+
         listStores.clear();
         db = FirebaseFirestore.getInstance();
         db.collection("Stores").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -115,8 +136,12 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Store s = document.toObject(Store.class);
                         listStores.add(s);
+                        Log.e("Test",s.getName());
                     }
-                    storeAdapter = new StoreAdapter(listStores, OrderFoodFragment.this);
+                    DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL);
+                    dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_1));
+                    storeAdapter = new StoreAdapter(listStores, OrderFoodFragment.this,getActivity());
+                    rvStores.addItemDecoration(dividerItemDecoration);
                     rvStores.setAdapter(storeAdapter);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                     rvStores.setLayoutManager(layoutManager);
@@ -191,9 +216,14 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         //intent.putExtra("RESTAURANT", restaurant);
         startActivity(intent);
         EventBus.getDefault().postSticky(new MessageEvent(store, com.uit.uitnow.MessageEvent.FROM_storeFRAG_TO_storeACT));
-// getActivity().overridePendingTransition(R.anim.slide_in_right,
-        //       R.anim.slide_out_left); // animation
+        getActivity().overridePendingTransition(R.anim.slide_in_right,
+               R.anim.slide_out_left); // animation
     }
 
 
+//    @Override
+//    public void onClick(String search) {
+//        twoWayView.setVisibility(View.GONE);
+//        txtTimKiem.setQuery(search,true);
+//    }
 }

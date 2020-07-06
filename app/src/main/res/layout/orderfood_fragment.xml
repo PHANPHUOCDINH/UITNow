@@ -5,11 +5,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white"
     android:orientation="vertical">
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/txtTimKiem"
+
+    <TextView
+        android:padding="10dp"
+        android:id="@+id/txtSearch"
+        android:drawableRight="@drawable/icon_search"
+        android:hint="Tìm Kiếm Cửa Hàng, Quán Ăn..."
+        android:textSize="17sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:defaultQueryHint="Tìm kiếm cửa hàng"/>
+        android:layout_height="wrap_content"/>
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+<!--    <androidx.appcompat.widget.SearchView-->
+<!--        android:id="@+id/txtTimKiem"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:defaultQueryHint="Tìm kiếm cửa hàng" />-->
+<!--    </RelativeLayout>-->
+<!--    <org.lucasr.twowayview.TwoWayView-->
+<!--        android:visibility="gone"-->
+<!--        style="@style/TwoWayView"-->
+<!--        android:layout_gravity="center_vertical"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/listSearchHistory"/>-->
     <TextView
         android:id="@+id/tvMyAddress"
         android:layout_width="match_parent"

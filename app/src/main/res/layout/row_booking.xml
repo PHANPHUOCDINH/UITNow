@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_marginBottom="20dp">
+    <TextView
+        android:layout_marginLeft="5dp"
+        android:id="@+id/tvBookingTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Black Coffee"
+        android:textColor="@color/colorOrange"
+        android:textSize="18sp" />
+    <TextView
+        android:layout_marginLeft="5dp"
+        android:id="@+id/tvBookingDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Black Coffee"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
+    <Button
+        android:drawableLeft="@drawable/icon_calendar"
+        android:textSize="20sp"
+        android:id="@+id/btnDateChoose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/icon_arrowright"/>
+    <org.lucasr.twowayview.TwoWayView
+        style="@style/TwoWayView"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listHours"/>
+</LinearLayout>

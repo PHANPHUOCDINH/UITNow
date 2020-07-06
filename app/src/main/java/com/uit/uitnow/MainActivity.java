@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private OrderFragment orderFragment;
     private OrderFoodFragment orderFoodFragment;
     private BookTableFragment bookTableFragment;
+    private BookingFragment bookingFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             orderFragment = new OrderFragment();
             orderFoodFragment = new OrderFoodFragment();
             bookTableFragment = new BookTableFragment();
+            bookingFragment=new BookingFragment();
             FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
             ft.add(R.id.layoutContainer,orderFoodFragment,"Order Food");
             ft.commit();
@@ -76,11 +78,19 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab());
         tabLayout.getTabAt(2).setCustomView(tabOrder);
 
+        TextView tabBooking = (TextView) LayoutInflater.from(this).inflate(R.layout.layout_custom_tab, null);
+        tabBooking.setText("Bàn đặt");
+        tabBooking.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_order, 0, 0);
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.getTabAt(3).setCustomView(tabBooking);
+
         TextView tabProfile = (TextView) LayoutInflater.from(this).inflate(R.layout.layout_custom_tab, null);
         tabProfile.setText("Hồ sơ");
         tabProfile.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.icon_profile, 0, 0);
         tabLayout.addTab(tabLayout.newTab());
-        tabLayout.getTabAt(3).setCustomView(tabProfile);
+        tabLayout.getTabAt(4).setCustomView(tabProfile);
+
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -99,7 +109,11 @@ public class MainActivity extends AppCompatActivity {
                         toolBarTextView.setText("Đơn đã đặt");
                         displayOrderFragment();
                         break;
-                    case 3: // Profile
+                    case 3:
+                        toolBarTextView.setText("Bàn đặt");
+                        displayBookingFragment();
+                        break;
+                    case 4: // Profile
                         toolBarTextView.setText("Thông tin cá nhân");
                         displayProfileFragment();
                         break;
@@ -141,6 +155,10 @@ public class MainActivity extends AppCompatActivity {
         {
             ft.hide(profileFragment);
         }
+        if(bookingFragment.isAdded())
+        {
+            ft.hide(bookingFragment);
+        }
         ft.commit();
     }
     protected void displayBookTableFragment()
@@ -165,6 +183,10 @@ public class MainActivity extends AppCompatActivity {
         if(profileFragment.isAdded())
         {
             ft.hide(profileFragment);
+        }
+        if(bookingFragment.isAdded())
+        {
+            ft.hide(bookingFragment);
         }
         ft.commit();
     }
@@ -191,8 +213,43 @@ public class MainActivity extends AppCompatActivity {
         {
             ft.hide(profileFragment);
         }
+        if(bookingFragment.isAdded())
+        {
+            ft.hide(bookingFragment);
+        }
         ft.commit();
     }
+
+    protected void displayBookingFragment()
+    {
+        FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
+        if(bookingFragment.isAdded())
+        {
+            ft.show(bookingFragment);
+        }
+        else
+        {
+            ft.add(R.id.layoutContainer,bookingFragment,"Profile");
+        }
+        if(bookTableFragment.isAdded())
+        {
+            ft.hide(bookTableFragment);
+        }
+        if(orderFragment.isAdded())
+        {
+            ft.hide(orderFragment);
+        }
+        if(orderFoodFragment.isAdded())
+        {
+            ft.hide(orderFoodFragment);
+        }
+        if(profileFragment.isAdded())
+        {
+            ft.hide(profileFragment);
+        }
+        ft.commit();
+    }
+
     protected void displayProfileFragment()
     {
         FragmentTransaction ft=getSupportFragmentManager().beginTransaction();
@@ -215,6 +272,10 @@ public class MainActivity extends AppCompatActivity {
         if(orderFoodFragment.isAdded())
         {
             ft.hide(orderFoodFragment);
+        }
+        if(bookingFragment.isAdded())
+        {
+            ft.hide(bookingFragment);
         }
         ft.commit();
     }

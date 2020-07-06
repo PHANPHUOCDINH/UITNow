@@ -1,6 +1,7 @@
 package com.uit.uitnow;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 
 public class StoreActivity extends AppCompatActivity implements View.OnClickListener,ItemAdapter.OnItemClickListener {
     TextView tvName, tvAddress, tvOpenHours, tvTotalPrices, tvTotalItems;
-    ImageView ivCover;
+    ImageView ivCover,btnLike;
     View layoutViewBasket;
     RecyclerView rvDrinks;
     ItemAdapter itemAdapter;
@@ -59,7 +61,7 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
             store=event.store;
             store.menu=new ArrayList<>();
             app.basket = new Basket();
-            displayRestaurantInfo();
+            displayStoreInfo();
             showMenu(store.id);
             EventBus.getDefault().removeStickyEvent(event);
         }
@@ -84,12 +86,15 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         tvTotalItems = findViewById(R.id.tvTotalItems);
         layoutViewBasket = findViewById(R.id.layoutViewBasket);
         layoutViewBasket.setOnClickListener(this);
+        btnLike=findViewById(R.id.btnLike);
+        btnLike.setOnClickListener(this);
     }
 
-    private void displayRestaurantInfo() {
+    private void displayStoreInfo() {
         tvName.setText(store.name);
         tvAddress.setText(store.address);
         tvOpenHours.setText(store.getOpenHours());
+        btnLike.setImageDrawable(app.savedStore.contains(store.getId())?getResources().getDrawable(R.drawable.icon_liked):getResources().getDrawable(R.drawable.icon_like));
         Picasso.get().load(store.getLogoUrl()).into(ivCover);
     }
     private void showMenu(String id)
@@ -105,15 +110,16 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
                                 Log.d("Test", document.getId() + " => " + document.getData());
                             }
                             Log.e("Test","Number of stores: "+store.menu.size());
+                            DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(StoreActivity.this,DividerItemDecoration.VERTICAL);
+                            dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_1));
                             itemAdapter = new ItemAdapter(store.menu,StoreActivity.this);
+                            rvDrinks.addItemDecoration(dividerItemDecoration);
                             rvDrinks.setAdapter(itemAdapter);
-                      //      updateBasket();
                         } else {
                             Log.d("Test", "Error getting documents: ", task.getException());
                         }
                     }
                 });
-
     }
 
     @Override
@@ -129,6 +135,19 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
             } else {
                 Toast.makeText(this, "Giỏ hàng đang trống",
                         Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if(view.getId()==R.id.btnLike)
+        {
+            if(!app.savedStore.contains(store.getId()))
+            {
+                btnLike.setImageDrawable(getResources().getDrawable(R.drawable.icon_liked));
+                app.savedStore.add(store.getId());
+            }
+            else
+            {
+                btnLike.setImageDrawable(getResources().getDrawable(R.drawable.icon_like));
+                app.savedStore.remove(store.getId());
             }
         }
     }

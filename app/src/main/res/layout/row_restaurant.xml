@@ -34,6 +34,16 @@
         android:text="Ho Chi Minh"
         android:textColor="@color/colorTextHint"
         android:textSize="16sp" />
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAddress"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/ivImage"
+        android:text="Ho Chi Minh"
+        android:textColor="@color/colorTextHint"
+        android:textSize="16sp" />
 </RelativeLayout>
 
     <!-- một row trong Recycler View -->

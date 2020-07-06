@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background"
     >
 
     <ImageView
@@ -12,7 +11,7 @@
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_shipper" />
+        android:src="@drawable/icon_now" />
 
     <TextView
         android:id="@+id/tvName"
@@ -20,17 +19,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ivLogo"
         android:layout_marginTop="-2dp"
-        android:fontFamily="casual"
         android:gravity="center"
         android:text="@string/app_name"
         android:textColor="@color/colorPrimary"
-        android:textSize="40sp"
+        android:textSize="44sp"
         android:textStyle="bold" />
 
     <TextView
         android:layout_marginBottom="15dp"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="22sp"
         android:gravity="center"
         android:layout_below="@id/tvName"
         android:id="@+id/tvSlogan"
@@ -39,6 +37,7 @@
         android:layout_height="wrap_content" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_marginTop="10dp"
         android:id="@+id/txtEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,15 +46,12 @@
         android:drawablePadding="15dp"
         android:inputType="textEmailAddress"
         android:padding="25dp"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
+        android:textSize="20sp"
         android:hint="Email"
-        app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
         app:met_maxCharacters="32"
-        app:met_primaryColor="@android:color/white"
+        android:textColor="@color/colorPrimary"
         app:met_singleLineEllipsis="true"
-
         />
 
     <TextView
@@ -71,9 +67,11 @@
         android:layout_marginRight="23dp"
         android:layout_marginBottom="20dp"
         android:text="Forgot?"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/colorPrimary" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
         android:inputType="textPassword"
         android:padding="25dp"
         android:drawablePadding="15dp"
@@ -83,12 +81,8 @@
         android:id="@+id/txtPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white"
-        app:met_baseColor="@android:color/white"
         app:met_floatingLabel="highlight"
         app:met_maxCharacters="32"
-        app:met_primaryColor="@android:color/white"
         app:met_singleLineEllipsis="true"/>
     <Button
         android:layout_marginTop="15dp"
@@ -121,13 +115,18 @@
         android:layout_marginRight="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <TextView
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:layout_marginBottom="30dp"
-        android:gravity="center"
-        android:text="Version 1.0"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
+    <ImageView
+
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/btnSignIn"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:src="@drawable/ic_shipper"/>
+    <ProgressBar
+        android:id="@+id/spinner"
+        android:layout_centerHorizontal="true"
+        style="?android:attr/progressBarStyle"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </RelativeLayout>

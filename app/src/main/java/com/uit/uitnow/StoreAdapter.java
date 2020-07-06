@@ -21,11 +21,12 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
     private ArrayList<Store> listStoresFull;
     private ArrayList<Store> listStores;
     private StoreListener listener;
-
-    public StoreAdapter(ArrayList<Store> stores,StoreListener listener) {
+    private Context context;
+    public StoreAdapter(ArrayList<Store> stores,StoreListener listener,Context context) {
         listStores = stores;
         listStoresFull=new ArrayList<>(stores);
         this.listener=listener;
+        this.context=context;
     }
 
     @NonNull
@@ -50,6 +51,17 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
                 listener.onStoreClick(store);
             }
         });
+        double point=Double.parseDouble(store.getPointRate());
+        if(point>6.0)
+        {
+            holder.tvPoint.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+        }
+        else
+        {
+            holder.tvPoint.setTextColor(context.getResources().getColor(R.color.colorRed));
+        }
+        holder.tvPoint.setText(store.getPointRate());
+        holder.tvDescription.setText(store.getDescription());
     }
 
     @Override
@@ -60,13 +72,15 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvAddress;
+        TextView tvName, tvAddress,tvPoint,tvDescription;
         ImageView ivImage;
         public ViewHolder(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName) ;
             ivImage = itemView.findViewById(R.id.ivImage);
             tvAddress = itemView.findViewById(R.id.tvAddress);
+            tvPoint=itemView.findViewById(R.id.tvPoint);
+            tvDescription=itemView.findViewById(R.id.tvDescription);
         }
     }
 
@@ -92,7 +106,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.ViewHolder> 
                  String filterString=charSequence.toString().toLowerCase().trim();
                  for(Store item: listStoresFull)
                  {
-                     if(item.getName().toLowerCase().contains(filterString))
+                     if(item.getName().toLowerCase().contains(filterString) || item.getDescription().toLowerCase().contains(filterString))
                          filterList.add(item);
                  }
              }

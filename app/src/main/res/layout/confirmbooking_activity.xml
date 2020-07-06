@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ImageView
+    android:id="@+id/ivImage"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:scaleType="centerCrop"
+    android:src="@mipmap/ic_launcher" />
+    <TextView
+        android:id="@+id/resName"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:drawablePadding="10dp"
+        android:text="xxx"
+        android:drawableLeft="@drawable/icon_tableorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/resAddress"
+        android:textSize="15sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:drawablePadding="10dp"
+        android:text="xxx"
+        android:drawableLeft="@drawable/ic_marker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:drawablePadding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:drawableLeft="@drawable/icon_time"
+        android:textColor="@color/colorPrimary"
+        android:text="123:123"
+        android:textSize="18sp"
+        android:id="@+id/txtHour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:drawablePadding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:drawableLeft="@drawable/icon_calendar"
+        android:textColor="@color/colorPrimary"
+        android:text="123:123"
+        android:textSize="18sp"
+        android:id="@+id/txtDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/cusName"
+        android:layout_marginLeft="5dp"
+        android:hint="Họ tên"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/cusPhoneNum"
+        android:layout_marginLeft="5dp"
+        android:hint="Số điện thoại"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:textSize="18sp"
+            android:text="Trẻ em"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/btnSubtract1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/icon_tru" />
+
+        <TextView
+            android:id="@+id/tvQuantity1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="2"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/btnAdd1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/icon_cong" />
+        <TextView
+            android:layout_marginLeft="95dp"
+            android:layout_marginRight="20dp"
+            android:textSize="18sp"
+            android:text="Người lớn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/btnSubtract2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/icon_tru" />
+
+        <TextView
+            android:id="@+id/tvQuantity2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="2"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/btnAdd2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/icon_cong" />
+    </LinearLayout>
+    <EditText
+        android:layout_marginLeft="5dp"
+        android:hint="Bàn gần cửa sổ,..."
+        android:layout_marginTop="20dp"
+        android:id="@+id/txtGhiChu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <org.lucasr.twowayview.TwoWayView
+        style="@style/TwoWayView"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:id="@+id/listTypes"/>
+    <Button
+        android:layout_marginRight="10dp"
+        android:layout_gravity="right"
+        android:background="@color/colorPrimary"
+        android:id="@+id/btnXacNhan"
+        android:text="Xác Nhận"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

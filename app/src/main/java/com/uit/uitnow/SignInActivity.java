@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class SignInActivity  extends AppCompatActivity {
+    ProgressBar spinner;
     App app;
     Button register;
     Button login;
@@ -32,9 +34,9 @@ public class SignInActivity  extends AppCompatActivity {
     FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
+        spinner=findViewById(R.id.spinner);
         register=findViewById(R.id.btnSignUp);
         login=findViewById(R.id.btnSignIn);
         txtEmail=findViewById(R.id.txtEmail);
@@ -49,6 +51,7 @@ public class SignInActivity  extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                spinner.setVisibility(View.VISIBLE);
                 String email=txtEmail.getText().toString();
                 String pass=txtPassword.getText().toString();
                 if(email.isEmpty()||pass.isEmpty())
@@ -75,6 +78,7 @@ public class SignInActivity  extends AppCompatActivity {
         final String email=PrefUtil.loadPref(this,"email");
         if(email!=null)
         {
+            spinner.setVisibility(View.VISIBLE);
             db= FirebaseFirestore.getInstance();
             db.collection("Users").whereEqualTo("email",email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -96,6 +100,10 @@ public class SignInActivity  extends AppCompatActivity {
                     }
                 }
             });
+        }
+        else
+        {
+            spinner.setVisibility(View.GONE);
         }
     }
 

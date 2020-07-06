@@ -1,12 +1,14 @@
 package com.uit.uitnow;
 
 import android.app.Application;
+import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class App extends Application {
@@ -17,7 +19,8 @@ public class App extends Application {
     OrderRequest request;
     String requestId;
     String currentAddress;
-
+    ArrayList<String> savedStore=new ArrayList<>();
+    ArrayList<String> searchHistory=new ArrayList<>();
     @Override
     public void onCreate() {
         super.onCreate();

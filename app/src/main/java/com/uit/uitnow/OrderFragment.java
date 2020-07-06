@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -165,6 +166,9 @@ public class OrderFragment extends Fragment implements OrderAdapter.OrderListene
                         orders.add(o);
                     }
                     Log.e("Test","Number of order: "+String.valueOf(orders.size()));
+                    DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL);
+                    dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_1));
+                    rvOrders.addItemDecoration(dividerItemDecoration);
                     adapter=new OrderAdapter(orders,OrderFragment.this,getActivity());
                     rvOrders.setAdapter(adapter);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

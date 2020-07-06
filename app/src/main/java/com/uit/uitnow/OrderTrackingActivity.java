@@ -55,10 +55,11 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
     App app;
     GoogleMap map;
     TextView tvDelivery, tvStore, tvTotal, tvStatus, tvDriverName, tvOnTheWay;
-    Button btnCancelBooking;
+    Button btnCancelBooking,btnLookForAnotherDriver;
     FirebaseFirestore db;
     GeoPoint store,delivery;
     ImageButton btnCall,btnChat;
+    boolean isReceived=false,isCancelledByDriver=false,isFinished=false;
     static final int CALL_REQUEST=101;
     @Override
     protected void onStart() {
@@ -138,6 +139,19 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                 openChat();
             }
         });
+        btnLookForAnotherDriver=findViewById(R.id.btnLookForAnotherDriver);
+        btnLookForAnotherDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.collection("Requests").document(app.requestId).update("status",OrderRequestStatus.REQUESTING).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        btnLookForAnotherDriver.setVisibility(View.GONE);
+                        layoutRequesting.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -179,36 +193,39 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
 
     @Override
     public void onBackPressed() {
+        if(isFinished)
+            finish();
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Xác nhận");
+            builder.setMessage("Bạn muốn hủy đơn hàng?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    db.collection("Orders").document(app.request.idOrder).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            db.collection("Requests").document(app.request.id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    finish();
+                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                                }
+                            });
+                        }
+                    });
 
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setTitle("Xác nhận");
-        builder.setMessage("Bạn muốn hủy đơn hàng?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                db.collection("Orders").document(app.request.idOrder).update("trangThai", "Cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        db.collection("Requests").document(app.request.id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                finish();
-                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                            }
-                        });
-                    }
-                });
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-        AlertDialog dialog=builder.create();
-        dialog.show();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
 
 //    private void cancelBookingOrder(String id)
@@ -235,17 +252,37 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
                     app.request = snapshot.toObject(OrderRequest.class);
                     if (app.request.status == OrderRequestStatus.REQUESTING) {
                         displayOrderRequest();
-                    } else if (app.request.status == OrderRequestStatus.ACCEPTED) {
+                    } else if (app.request.status == OrderRequestStatus.ACCEPTED&&!isReceived) {
                         NotificationTask.createNotification(OrderTrackingActivity.this,(int)System.currentTimeMillis(),R.drawable.ic_notification,"Đơn hàng đã được nhận","Đơn hàng "+app.request.getIdOrder()+" đã được shipper "+app.request.getDriverName()+" nhận");
+                        isReceived=true;
+                        isCancelledByDriver=false;
                         Map<String, Object> data = new HashMap<>();
                         data.put("driverName",app.request.driverName);
-                        db.collection("Orders").document(app.request.idOrder).set(data,SetOptions.merge());
-                        tvOnTheWay.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        displayDriverInfo();
-                        placeDriverMarkerOnMap();
-                    } else if (app.request.status == OrderRequestStatus.CANCELED_BY_DRIVER) {
+                        db.collection("Orders").document(app.request.idOrder).set(data,SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                tvOnTheWay.setTextColor(getResources().getColor(R.color.colorPrimary));
+                                tvOnTheWay.setText("Shipper đang đến");
+                                displayDriverInfo();
+                                placeDriverMarkerOnMap();
+                            }
+                        });
+
+                    } else if (app.request.status == OrderRequestStatus.CANCELED_BY_DRIVER&&!isCancelledByDriver) {
+                        NotificationTask.createNotification(OrderTrackingActivity.this,(int)System.currentTimeMillis(),R.drawable.ic_notification,"Đơn hàng đã bị hủy","Đơn hàng "+app.request.getIdOrder()+" đã bị shipper hủy");
+                        isCancelledByDriver=true;
+                        isReceived=false;
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("driverName",null);
+                        db.collection("Orders").document(app.request.idOrder).set(data,SetOptions.merge()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
                                 driverCancel();
-                    } else if (app.request.status == OrderRequestStatus.FINISHED) {
+                            }
+                        });
+
+                    } else if (app.request.status == OrderRequestStatus.FINISHED&&!isFinished) {
+                        isFinished=true;
                         NotificationTask.createNotification(OrderTrackingActivity.this,(int)System.currentTimeMillis(),R.drawable.ic_notification,"Đơn hàng đã hoàn tất","Đơn hàng "+app.request.getIdOrder()+" đã được hoàn tất");
                         Map<String, Object> data = new HashMap<>();
                         data.put("trangThai","Finished");
@@ -284,11 +321,18 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
     private void displayDriverInfo() {
         layoutRequesting.setVisibility(View.GONE);
         layoutOnTheWay.setVisibility(View.VISIBLE);
+        tvDriverName.setVisibility(View.VISIBLE);
         tvDriverName.setText("Shipper: " + app.request.driverName);
+        btnCall.setVisibility(View.VISIBLE);
+        btnChat.setVisibility(View.VISIBLE);
     }
 
     private void driverCancel()
     {
+        btnLookForAnotherDriver.setVisibility(View.VISIBLE);
+        tvDriverName.setVisibility(View.GONE);
+        btnCall.setVisibility(View.GONE);
+        btnChat.setVisibility(View.GONE);
         tvOnTheWay.setTextColor(getResources().getColor(R.color.colorRed));
         tvOnTheWay.setText("Order was canceled by driver");
     }
@@ -354,5 +398,10 @@ public class OrderTrackingActivity extends AppCompatActivity implements OnMapRea
     private void openChat() {
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

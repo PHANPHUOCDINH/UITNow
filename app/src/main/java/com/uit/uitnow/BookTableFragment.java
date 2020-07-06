@@ -1,5 +1,6 @@
 package com.uit.uitnow;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -22,6 +24,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -59,7 +63,7 @@ public class BookTableFragment extends Fragment implements RestaurantAdapter.OnR
                 swipeRests.setRefreshing(false);
             }
         });
-        showRestaurants("All");
+     //   showRestaurants("All");
         return view;
     }
 
@@ -77,6 +81,10 @@ public class BookTableFragment extends Fragment implements RestaurantAdapter.OnR
                             Restaurant r = document.toObject(Restaurant.class);
                             listRests.add(r);
                         }
+                        Log.e("Test","Number of res 1: "+listRests.size());
+                        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL);
+                        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_1));
+                        rvRests.addItemDecoration(dividerItemDecoration);
                         resAdapter = new RestaurantAdapter(listRests, BookTableFragment.this);
                         rvRests.setAdapter(resAdapter);
                         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -96,6 +104,7 @@ public class BookTableFragment extends Fragment implements RestaurantAdapter.OnR
                             Restaurant r = document.toObject(Restaurant.class);
                             listRests.add(r);
                         }
+                        Log.e("Test","Number of res 2: "+listRests.size());
                         resAdapter = new RestaurantAdapter(listRests, BookTableFragment.this);
                         rvRests.setAdapter(resAdapter);
                         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -106,12 +115,16 @@ public class BookTableFragment extends Fragment implements RestaurantAdapter.OnR
                 }
             });
         }
+
     }
 
     @Override
     public void onRestaurantClick(Restaurant res) {
-        RestaurantActivity restaurantActivity = new RestaurantActivity();
-        restaurantActivity.setPhone(res.getPhone());
-        restaurantActivity.show(getFragmentManager(), "book restaurant");
+        Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+        //intent.putExtra("RESTAURANT", restaurant);
+        startActivity(intent);
+        EventBus.getDefault().postSticky(new MessageEvent(res, MessageEvent.FROM_resFRAG_TO_resACT));
+        getActivity().overridePendingTransition(R.anim.slide_in_right,
+                R.anim.slide_out_left);
     }
 }

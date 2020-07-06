@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
     FirebaseFirestore db;
     Button btnUpdate,btnChangePass,btnSignOut;
     EditText txtName,txtPhone;
+    ImageView ivNoti;
     public ProfileFragment()
     {
 
@@ -102,6 +104,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
         if(!photoPath.isEmpty())
             Picasso.get().load(PrefUtil.loadPref(getActivity(), "photo")).into(ivAvatar);
         app=(App)getActivity().getApplication();
+        ivNoti=view.findViewById(R.id.ivNoti);
+        ivNoti.setOnClickListener(this);
         return view;
     }
 
@@ -133,6 +137,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
                 PrefUtil.clearPref(getActivity(),"name");
                 PrefUtil.clearPref(getActivity(),"phone");
                 PrefUtil.clearPref(getActivity(),"address");
+                PrefUtil.clearPref(getActivity(),"search");
                 Intent intent = new Intent(getActivity(), SignInActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -184,6 +189,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
                         {
                             VoucherDialogFragment dialog = new VoucherDialogFragment();
                             dialog.show(getActivity().getSupportFragmentManager(), "voucher_dialog");
+                        }
+                        else
+                        {
+                            if(id==R.id.ivNoti)
+                            {
+                                Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.slide_in_right,
+                                        R.anim.slide_out_left);
+                            }
                         }
                     }
                 }

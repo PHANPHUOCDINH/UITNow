@@ -48,6 +48,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
                 listener.onRestaurantClick(r);
             }
         });
+        holder.tvDescription.setText(r.getDescription());
     }
 
     @Override
@@ -56,13 +57,14 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvAddress;
+        TextView tvName, tvAddress,tvDescription;
         ImageView ivImage;
         public ViewHolder(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName) ;
             ivImage = itemView.findViewById(R.id.ivImage);
             tvAddress = itemView.findViewById(R.id.tvAddress);
+            tvDescription=itemView.findViewById(R.id.tvDescription);
         }
     }
 }

@@ -10,6 +10,8 @@ public class Store  {
     String openHours;
     String lat;
     String lng;
+    String pointRate;
+    String description;
     ArrayList<Item> menu;
     public String getId() {
         return id;
@@ -74,5 +76,21 @@ public class Store  {
 
     public void setLng(String lng) {
         this.lng = lng;
+    }
+
+    public String getPointRate() {
+        return pointRate;
+    }
+
+    public void setPointRate(String pointRate) {
+        this.pointRate = pointRate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

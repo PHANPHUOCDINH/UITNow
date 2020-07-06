@@ -1,5 +1,7 @@
 package com.uit.uitnow;
 
+import java.util.ArrayList;
+
 public class Restaurant {
     String id;
     String logoUrl;
@@ -8,6 +10,26 @@ public class Restaurant {
     String openHours;
     String phone;
     String district;
+    String description;
+    String lat;
+    String lng;
+    ArrayList<BookingInfo> bookingInfos;
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
 
     public String getPhone() {
         return phone;
@@ -65,4 +87,11 @@ public class Restaurant {
         this.openHours = openHours;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
