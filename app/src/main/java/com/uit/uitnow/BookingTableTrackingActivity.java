@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,7 @@ public class BookingTableTrackingActivity extends AppCompatActivity {
     private Booking booking;
     private TextView txtId,txtTrangThai,txtDate,txtResName,txtTime,txtNum,txtCusName,txtCusNum;
     private Button btnRebook,btnDel;
+    LinearLayout layoutCountdown;
     @Override
     protected void onStart() {
         super.onStart();
@@ -64,6 +66,18 @@ public class BookingTableTrackingActivity extends AppCompatActivity {
         txtNum.setText(booking.getNumNguoiLon()+" Người lớn, "+booking.getNumTreEm()+" Trẻ em");
         txtCusName.setText(booking.getCusName());
         txtCusNum.setText(booking.getCusPhoneNum());
+        if(Integer.parseInt(booking.getTrangThai())==BookingRequestStatus.REQUESTING)
+        {
+            tvEventStart.setVisibility(View.GONE);
+            layoutCountdown.setVisibility(View.GONE);
+        }
+        if(Integer.parseInt(booking.getTrangThai())==BookingRequestStatus.ACCEPTED)
+        {
+            tvEventStart.setVisibility(View.VISIBLE);
+            layoutCountdown.setVisibility(View.VISIBLE);
+            btnDel.setVisibility(View.INVISIBLE);
+            countDownStart();
+        }
     }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +111,7 @@ public class BookingTableTrackingActivity extends AppCompatActivity {
         txtMinute = (TextView) findViewById(R.id.txtMinute);
         txtSecond = (TextView) findViewById(R.id.txtSecond);
         tvEventStart = (TextView) findViewById(R.id.tveventStart);
-        countDownStart();
+        layoutCountdown=findViewById(R.id.layoutCountdown);
     }
     public void countDownStart() {
         handler = new Handler();

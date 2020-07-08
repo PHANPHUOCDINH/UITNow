@@ -134,6 +134,7 @@ public class BasketDialogFragment extends DialogFragment implements ItemBasketAd
                     db.collection("Orders").document(String.valueOf(l)).collection("basket").document(item.getId()).set(itemData, SetOptions.merge());
                 }
                 ((StoreActivity) getActivity()).requestOrder(geoPoint);
+
                 getDialog().dismiss();
             } else {
                 getDialog().dismiss();

@@ -47,11 +47,8 @@
         <activity android:name=".BookingTableTrackingActivity"/>
         <activity android:name=".NotificationActivity"/>
         <activity android:name=".LocationMapActivity"/>
-        <receiver android:name=".NetworkChangeReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+        <activity android:name=".SearchActivity"/>
+        <activity android:name=".SavedStoreActivity"/>
     </application>
 
 </manifest>

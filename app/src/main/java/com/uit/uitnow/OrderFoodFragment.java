@@ -43,42 +43,46 @@ import org.greenrobot.eventbus.EventBus;
 import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
-public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreListener, LocationListener{
-    App app;
-    RecyclerView rvStores;
-    StoreAdapter storeAdapter;
-    ArrayList<Store> listStores = new ArrayList<>();
-    SwipeRefreshLayout swipeStores;
-    TextView tvMyAddress;
+public class OrderFoodFragment extends Fragment implements LocationListener, ListStoreViewAdapter.OnStoreClickListener {
+    List<String> images= Arrays.asList("https://firebasestorage.googleapis.com/v0/b/uitnow-8e7f3.appspot.com/o/stores%2Fic_thecoffeehouse.jpg?alt=media&token=15f3f27e-c8c4-4fa1-ac0d-8ca44809d43c","https://firebasestorage.googleapis.com/v0/b/uitnow-8e7f3.appspot.com/o/stores%2Fic_phuclong.png?alt=media&token=6580bb9e-77e4-4793-8b26-1dea6365f22c","https://firebasestorage.googleapis.com/v0/b/uitnow-8e7f3.appspot.com/o/stores%2Fic_toocha.jpg?alt=media&token=68461b64-64f9-467c-a54a-2a30656e3ffb","https://firebasestorage.googleapis.com/v0/b/uitnow-8e7f3.appspot.com/o/stores%2Fic_highland.jpeg?alt=media&token=e0e5322a-a9c6-4930-8442-58feeebaf343","https://firebasestorage.googleapis.com/v0/b/uitnow-8e7f3.appspot.com/o/stores%2Fic_thealley.png?alt=media&token=b4b931fc-0ebb-4d0d-a8d5-0f599e2ee644");
+    List<String> infos=Arrays.asList("Shop 1","Shop 2","Shop 3","Shop 4","Shop 5");
+    List<String> ids=Arrays.asList("azE2b6uJIWWc1fQZvqZ2","eMfwm1dcOxK1tZrL8pqh","jX2lsAwZYA4sADSqaov8","oMlwOsitRYeaE3duu6rJ","tgueDzlIGVRArsPUfuC5");
     FirebaseFirestore db;
- //   Button btnTimKiem;
-    TextView txtTimKiem;
- //   TwoWayView twoWayView;
+    App app;
+    SwipeRefreshLayout swipe;
+    TextView tvMyAddress,txtTitle1,txtTitle2,txtTitle3,txtTitle4,txtSearch;
+    TwoWayView list1,list2,list3,list4,list5;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.orderfood_fragment, container, false);
         //twoWayView=view.findViewById(R.id.listSearchHistory);
-        tvMyAddress = view.findViewById(R.id.tvMyAddress);
-        rvStores = view.findViewById(R.id.rvStores);
-        swipeStores = view.findViewById(R.id.swipeStores);
-        txtTimKiem = view.findViewById(R.id.txtSearch);
-        txtTimKiem.setOnClickListener(new View.OnClickListener() {
+        txtSearch=view.findViewById(R.id.txtSearch);
+        txtSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                //intent.putExtra("RESTAURANT", restaurant);
+                startActivity(intent);
+               // EventBus.getDefault().postSticky(new MessageEvent(s, com.uit.uitnow.MessageEvent.FROM_storeFRAG_TO_storeACT));
+                getActivity().overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left); // animation
             }
         });
-        swipeStores.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                showStores();
-            }
-        });
-        showStores();
+        tvMyAddress = view.findViewById(R.id.tvMyAddress);
+        txtTitle1=view.findViewById(R.id.tvlay1);
+        txtTitle2=view.findViewById(R.id.tvlay2);
+        txtTitle3=view.findViewById(R.id.tvlay3);
+        txtTitle4=view.findViewById(R.id.tvlay4);
+        list1=view.findViewById(R.id.list1);
+        list2=view.findViewById(R.id.list2);
+        list3=view.findViewById(R.id.list3);
+        list4=view.findViewById(R.id.list4);
         return view;
     }
 
@@ -86,7 +90,11 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         app = (App) getActivity().getApplication();
-        Toast.makeText(getActivity(),String.valueOf(app.searchHistory.size()),Toast.LENGTH_SHORT).show();
+
+        showLay1();
+        showLay2();
+        showLay3();
+        showLay4();
 //        txtTimKiem.setOnSearchClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -125,32 +133,29 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         }
     }
 
-    private void showStores() {
+    private void showLay1() {
+        txtTitle1.setText("Recent Visits");
+        ListStoreViewAdapter mAdapter=new ListStoreViewAdapter(getContext(),images,infos,ids,this);
+        list1.setAdapter(mAdapter);
+    }
 
-        listStores.clear();
-        db = FirebaseFirestore.getInstance();
-        db.collection("Stores").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Store s = document.toObject(Store.class);
-                        listStores.add(s);
-                        Log.e("Test",s.getName());
-                    }
-                    DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL);
-                    dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_1));
-                    storeAdapter = new StoreAdapter(listStores, OrderFoodFragment.this,getActivity());
-                    rvStores.addItemDecoration(dividerItemDecoration);
-                    rvStores.setAdapter(storeAdapter);
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                    rvStores.setLayoutManager(layoutManager);
-                    swipeStores.setRefreshing(false);
-                } else {
-                    Log.d("Test", "Error getting documents: ", task.getException());
-                }
-            }
-        });
+    private void showLay2() {
+        txtTitle2.setText("Top Sell");
+        ListStoreViewAdapter mAdapter=new ListStoreViewAdapter(getContext(),images,infos,ids,this);
+        list2.setAdapter(mAdapter);
+    }
+
+    private void showLay3() {
+        txtTitle3.setText("Guess You Like");
+        ListStoreViewAdapter mAdapter=new ListStoreViewAdapter(getContext(),images,infos,ids,this);
+        list3.setAdapter(mAdapter);
+    }
+
+    private void showLay4()
+    {
+        txtTitle4.setText("Trending Now");
+        ListStoreViewAdapter mAdapter=new ListStoreViewAdapter(getContext(),images,infos,ids,this);
+        list4.setAdapter(mAdapter);
     }
 
     private void getLastLocation(Context context) {
@@ -183,7 +188,8 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
         String address=LocationServiceTask.getAddressFromLatLng(getActivity(),geoPoint);
         tvMyAddress.setText("Delivery to: "+ address);
         PrefUtil.savePref(getActivity(),"address",address);
-        app.user.setAddress(address);
+
+            app.user.setAddress(address);
     }
 
     @Override
@@ -211,13 +217,25 @@ public class OrderFoodFragment extends Fragment implements StoreAdapter.StoreLis
     }
 
     @Override
-    public void onStoreClick(Store store) {
-        Intent intent = new Intent(getActivity(), StoreActivity.class);
-        //intent.putExtra("RESTAURANT", restaurant);
-        startActivity(intent);
-        EventBus.getDefault().postSticky(new MessageEvent(store, com.uit.uitnow.MessageEvent.FROM_storeFRAG_TO_storeACT));
-        getActivity().overridePendingTransition(R.anim.slide_in_right,
-               R.anim.slide_out_left); // animation
+    public void onStoreClick(String s) {
+        db=FirebaseFirestore.getInstance();
+        db.collection("Stores").whereEqualTo("id",s).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    Store s = null;
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        s = document.toObject(Store.class);
+                    }
+                    Intent intent = new Intent(getActivity(), StoreActivity.class);
+                    //intent.putExtra("RESTAURANT", restaurant);
+                    startActivity(intent);
+                    EventBus.getDefault().postSticky(new MessageEvent(s, com.uit.uitnow.MessageEvent.FROM_storeFRAG_TO_storeACT));
+                    getActivity().overridePendingTransition(R.anim.slide_in_right,
+                            R.anim.slide_out_left); // animation
+                }
+            }
+        });
     }
 
 

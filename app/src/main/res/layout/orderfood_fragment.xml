@@ -37,17 +37,126 @@
         android:textSize="16sp"
         android:layout_height="wrap_content"
         android:padding="10dp" />
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeStores"
+    
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="5dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvStores"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent">
+            <org.lucasr.twowayview.TwoWayView
+                style="@style/TwoWayView"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/list5"/>
 
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/layoutRecently">
+            <TextView
+                android:layout_marginBottom="8dp"
+                android:drawableRight="@drawable/icon_arrowright"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/tvlay1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Black Coffee"
+                android:textColor="@color/colorOrange"
+                android:textSize="18sp" />
+            <org.lucasr.twowayview.TwoWayView
+                style="@style/TwoWayView"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/list1"/>
+        </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/layoutTopSell">
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:drawableRight="@drawable/icon_arrowright"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/tvlay2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Black Coffee"
+            android:textColor="@color/colorOrange"
+            android:textSize="18sp" />
+        <org.lucasr.twowayview.TwoWayView
+            style="@style/TwoWayView"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list2"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/layoutSuggestion">
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/tvlay3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Black Coffee"
+            android:textColor="@color/colorOrange"
+            android:textSize="18sp" />
+        <org.lucasr.twowayview.TwoWayView
+            style="@style/TwoWayView"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list3"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/layoutNowTrend">
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/tvlay4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Black Coffee"
+            android:textColor="@color/colorOrange"
+            android:textSize="18sp" />
+        <org.lucasr.twowayview.TwoWayView
+            style="@style/TwoWayView"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list4"/>
+    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

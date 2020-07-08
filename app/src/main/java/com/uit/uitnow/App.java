@@ -10,6 +10,9 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class App extends Application {
     User user;
@@ -20,7 +23,7 @@ public class App extends Application {
     String requestId;
     String currentAddress;
     ArrayList<String> savedStore=new ArrayList<>();
-    ArrayList<String> searchHistory=new ArrayList<>();
+
     @Override
     public void onCreate() {
         super.onCreate();

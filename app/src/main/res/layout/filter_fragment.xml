@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+    <RelativeLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="1dp"
+            android:text="Reset"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:textColor="@color/colorPrimary"
+        android:text="Area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/btnQ1"
+            android:text="Q.1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <RadioButton
+            android:id="@+id/btnQ2"
+            android:text="Q.2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+            <RadioButton
+                android:id="@+id/btnQ3"
+                android:text="Q.3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:id="@+id/btnQ4"
+                android:text="Q.4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    <TextView
+        android:textColor="@color/colorPrimary"
+        android:text="Category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/btnTraSua"
+                android:text="Trà Sữa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:id="@+id/btnCom"
+                android:text="Cơm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:id="@+id/btnSinhTo"
+                android:text="Sinh tố"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    <TextView
+        android:textColor="@color/colorPrimary"
+        android:text="Advance Filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/btnTopRate"
+                android:text="Top-Rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:id="@+id/btnPickUp"
+                android:text="Pick up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:id="@+id/btnSuggestion"
+                android:text="Suggestion for you"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    <Button
+        android:id="@+id/btnFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bg_green_border_button"
+        android:text="Áp dụng"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary" />
+</LinearLayout>

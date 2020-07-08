@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="5dp">
+    <TextView
+        android:layout_marginBottom="15dp"
+        android:layout_above="@id/ivImage"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center"
+        android:text="Saved"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_user"
+        android:layout_centerVertical="true"/>
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:id="@+id/middleInf"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/ivImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KFC"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvName"
+            android:layout_marginTop="8dp"
+
+            android:text="Ho Chi Minh"
+            android:textColor="@color/colorTextHint"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tvPoint"
+            android:layout_marginTop="8dp"
+            android:drawableLeft="@drawable/icon_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
+
+    <!-- một row trong Recycler View -->

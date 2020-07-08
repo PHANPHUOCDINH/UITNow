@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
     File photoFile;
     App app;
     CircleImageView ivAvatar;
-    TextView tvEmail,tvAddress,txtSeeVouchers;
+    TextView tvEmail,tvAddress,txtSeeVouchers,txtSaved;
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
     FirebaseFirestore db;
@@ -106,6 +106,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
         app=(App)getActivity().getApplication();
         ivNoti=view.findViewById(R.id.ivNoti);
         ivNoti.setOnClickListener(this);
+        txtSaved=view.findViewById(R.id.txtSavedStore);
+        txtSaved.setOnClickListener(this);
         return view;
     }
 
@@ -195,6 +197,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener,Ch
                             if(id==R.id.ivNoti)
                             {
                                 Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.slide_in_right,
+                                        R.anim.slide_out_left);
+                            }
+                            else
+                            {
+                                Intent intent =new Intent(getActivity(),SavedStoreActivity.class);
                                 startActivity(intent);
                                 getActivity().overridePendingTransition(R.anim.slide_in_right,
                                         R.anim.slide_out_left);

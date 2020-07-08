@@ -141,11 +141,13 @@ public class StoreActivity extends AppCompatActivity implements View.OnClickList
         {
             if(!app.savedStore.contains(store.getId()))
             {
+                Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
                 btnLike.setImageDrawable(getResources().getDrawable(R.drawable.icon_liked));
                 app.savedStore.add(store.getId());
             }
             else
             {
+                Toast.makeText(this,"Unsaved",Toast.LENGTH_SHORT).show();
                 btnLike.setImageDrawable(getResources().getDrawable(R.drawable.icon_like));
                 app.savedStore.remove(store.getId());
             }
